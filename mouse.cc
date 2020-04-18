@@ -41,3 +41,11 @@ int Mouse::animation_frame() const {
 bool Mouse::moving() const {
   return x_ != tx_ || y_ != ty_;
 }
+
+int Mouse::mapx() const {
+  return tx_ / 16;
+}
+
+int Mouse::mapy() const {
+  return ty_ / 16;
+}

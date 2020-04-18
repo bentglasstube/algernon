@@ -16,6 +16,9 @@ class Mouse {
 
     bool moving() const;
 
+    int mapx() const;
+    int mapy() const;
+
   private:
 
     float x_, y_, tx_, ty_;

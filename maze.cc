@@ -104,6 +104,11 @@ bool Maze::done() const {
   return frontier_.empty() && breakup_ == 0;
 }
 
+bool Maze::wall(int x, int y, int dir) const {
+  if (!valid({x, y})) return true;
+  return cells_[y * width_ + x].test(dir);
+}
+
 void Maze::draw(Graphics& graphics, int xo, int yo) const {
   for (int y = 0; y < height_; ++y) {
     for (int x = 0; x < width_; ++x) {

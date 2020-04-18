@@ -22,6 +22,8 @@ class Maze {
     void generate();
     bool done() const;
 
+    bool wall(int x, int y, int dir) const;
+
   private:
 
     struct Point { int x, y; };

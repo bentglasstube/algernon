@@ -34,16 +34,18 @@ cc_library(
     name = "screens",
     srcs = [
         "title_screen.cc",
+        "maze_screen.cc",
     ],
     hdrs = [
         "title_screen.h",
+        "maze_screen.h",
     ],
     deps = [
         "@libgam//:screen",
         "@libgam//:text",
         ":maze",
-        ":timer",
         ":mouse",
+        ":timer",
     ],
 )
 

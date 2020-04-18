@@ -1,5 +1,7 @@
 #include "title_screen.h"
 
+#include "maze_screen.h"
+
 TitleScreen::TitleScreen() :
   text_("text.png"), maze_(16, 10),
   generator_(50), flash_(1000)
@@ -26,5 +28,5 @@ void TitleScreen::draw(Graphics& graphics) const {
 }
 
 Screen* TitleScreen::next_screen() const {
-  return nullptr;
+  return new MazeScreen();
 }
