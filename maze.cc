@@ -152,3 +152,11 @@ void Maze::open_wall(Maze::Point a, Maze::Point b) {
 void Maze::unset(Maze::Point p, uint8_t bit) {
   if (valid(p)) cells_[p.y * width_ + p.x].reset(bit);
 }
+
+int Maze::width() const {
+  return width_;
+}
+
+int Maze::height() const {
+  return height_;
+}

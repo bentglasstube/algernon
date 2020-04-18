@@ -1,9 +1,13 @@
 #pragma once
 
+#include <vector>
+#include <random>
+
 #include "screen.h"
 
 #include "maze.h"
 #include "mouse.h"
+#include "object.h"
 #include "text.h"
 #include "timer.h"
 
@@ -22,6 +26,10 @@ class MazeScreen : public Screen {
     Text text_;
     Maze maze_;
     Mouse mouse_;
+    Timer spawner_;
+
+    std::vector<Object> objects_;
+    std::mt19937 rand_;
 
     void try_to_move(int direction);
 };

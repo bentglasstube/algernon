@@ -24,6 +24,9 @@ class Maze {
 
     bool wall(int x, int y, int dir) const;
 
+    int width() const;
+    int height() const;
+
   private:
 
     struct Point { int x, y; };

@@ -7,6 +7,11 @@ Mouse::Mouse(int x, int y, bool left) :
 
 void Mouse::draw(Graphics& graphics, int xo, int yo) const {
   sprites_.draw_ex(graphics, animation_frame(), xo + x_, yo + y_, left_, 0, 0, 0);
+
+#ifndef NDEBUG
+  SDL_Rect r = {tx_, ty_, 16, 16};
+  graphics.draw_rect(&r, 0x234599ff, false);
+#endif
 }
 
 void Mouse::update(unsigned int elapsed) {

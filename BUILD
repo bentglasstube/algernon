@@ -45,6 +45,7 @@ cc_library(
         "@libgam//:text",
         ":maze",
         ":mouse",
+        ":object",
         ":timer",
     ],
 )
@@ -76,3 +77,14 @@ cc_library(
         ":timer",
     ],
 )
+
+cc_library(
+    name = "object",
+    srcs = ["object.cc"],
+    hdrs = ["object.h"],
+    deps = [
+        "@libgam//:graphics",
+        "@libgam//:spritemap",
+    ],
+)
+
