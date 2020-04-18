@@ -2,6 +2,8 @@
 
 #include "spritemap.h"
 
+#include "timer.h"
+
 class Mouse {
   public:
 
@@ -13,7 +15,7 @@ class Mouse {
   private:
 
     int x_, y_, tx_, ty_;
-    int timer_;
+    Timer animation_;
     bool left_;
 
     SpriteMap sprites_;

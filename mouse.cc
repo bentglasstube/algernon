@@ -1,7 +1,7 @@
 #include "mouse.h"
 
 Mouse::Mouse(int x, int y, bool left) :
-  x_(x), y_(y), tx_(x), ty_(y_), timer_(0), left_(left),
+  x_(x), y_(y), tx_(x), ty_(y_), animation_(500), left_(left),
   sprites_("objects.png", 4, 16, 16)
 {}
 
@@ -11,12 +11,11 @@ void Mouse::draw(Graphics& graphics, int xo, int yo) const {
 }
 
 void Mouse::update(unsigned int elapsed) {
-  timer_ += elapsed;
-  if (timer_ > 500) timer_ -= 500;
+  animation_.update(elapsed);
 
   // TODO move toward target
 }
 
 int Mouse::animation_frame() const {
-  return timer_ / 125;
+  return animation_.value()/ 125;
 }
