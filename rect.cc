@@ -14,5 +14,8 @@ float Rect::width() const { return w_; }
 float Rect::height() const { return h_; }
 
 bool Rect::intersect(const Rect& other) const {
-  return false;
+  if (other.left() > right() || left() > other.right()) return false;
+  if (other.top() > bottom() || top() > other.bottom()) return false;
+
+  return true;
 }

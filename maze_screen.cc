@@ -29,9 +29,9 @@ bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
 
   // TODO sometimes this doesn't pick things up, improve code
   std::remove_if( objects_.begin(), objects_.end(),
-      [this](Object const& o){
-        if (o.mapx() == mouse_.mapx() && o.mapy() == mouse_.mapy()) {
-          // TODO grant powerup
+      [this](Object& o){
+        if (o.hitbox().intersect(mouse_.hitbox())) {
+          // TODO give powerup
           return true;
         } else {
           return false;
