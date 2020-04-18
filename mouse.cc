@@ -1,7 +1,7 @@
 #include "mouse.h"
 
 Mouse::Mouse(int x, int y, bool left) :
-  x_(x), y_(y), tx_(x), ty_(y), animation_(500), left_(left),
+  x_(x), y_(y), tx_(x), ty_(y), animation_(240), left_(left),
   sprites_("objects.png", 4, 16, 16)
 {}
 
@@ -35,7 +35,7 @@ void Mouse::set_target(int x, int y) {
 }
 
 int Mouse::animation_frame() const {
-  return moving() ? animation_.value()/ 125 : 0;
+  return moving() ? animation_.value() / 60: 0;
 }
 
 bool Mouse::moving() const {
