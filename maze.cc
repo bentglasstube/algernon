@@ -11,8 +11,8 @@ Maze::Maze(int width, int height) :
   }
 
   rand_.seed(Util::random_seed());
-  std::uniform_int_distribution<int> rx(0, width_);
-  std::uniform_int_distribution<int> ry(0, height_);
+  std::uniform_int_distribution<int> rx(0, width_ - 1);
+  std::uniform_int_distribution<int> ry(0, height_ - 1);
 
   // Calculate middle room
   const int cx = width / 2;
@@ -73,8 +73,8 @@ void Maze::step() {
   unset({width_ - 2, height_ - 1}, 1);
 
   if (breakup_ > 0) {
-    std::uniform_int_distribution<int> rx(1, width_ - 1);
-    std::uniform_int_distribution<int> ry(1, height_ - 1);
+    std::uniform_int_distribution<int> rx(1, width_ - 2);
+    std::uniform_int_distribution<int> ry(1, height_ - 2);
     std::uniform_int_distribution<int> rd(0, 3);
 
     const int x = rx(rand_);
