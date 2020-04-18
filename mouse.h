@@ -12,13 +12,19 @@ class Mouse {
     void draw(Graphics& graphics, int xo, int yo) const;
     void update(unsigned int elapsed);
 
+    void set_target(int x, int y);
+
+    bool moving() const;
+
   private:
 
-    int x_, y_, tx_, ty_;
+    float x_, y_, tx_, ty_;
     Timer animation_;
     bool left_;
 
     SpriteMap sprites_;
+
+    static constexpr float kVelocity = 16 / 500.0f;
 
     int animation_frame() const;
 

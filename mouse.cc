@@ -1,21 +1,40 @@
 #include "mouse.h"
 
 Mouse::Mouse(int x, int y, bool left) :
-  x_(x), y_(y), tx_(x), ty_(y_), animation_(500), left_(left),
+  x_(x), y_(y), tx_(x), ty_(y), animation_(500), left_(left),
   sprites_("objects.png", 4, 16, 16)
 {}
 
 void Mouse::draw(Graphics& graphics, int xo, int yo) const {
-  // TODO support flipping
-  sprites_.draw(graphics, animation_frame(), xo + x_, yo + y_);
+  sprites_.draw_ex(graphics, animation_frame(), xo + x_, yo + y_, left_, 0, 0, 0);
 }
 
 void Mouse::update(unsigned int elapsed) {
   animation_.update(elapsed);
 
-  // TODO move toward target
+  const float delta = kVelocity * elapsed;
+
+  if (x_ < tx_) {
+    x_ = std::min(x_ + delta, tx_);
+  } else if (x_ > tx_) {
+    x_ = std::max(x_ - delta, tx_);
+  } else if (y_ < ty_) {
+    y_ = std::min(y_ + delta, ty_);
+  } else if (y_ > ty_) {
+    y_ = std::max(y_ - delta, ty_);
+  }
+
+}
+
+void Mouse::set_target(int x, int y) {
+  tx_ = x * 16;
+  ty_ = y * 16;
 }
 
 int Mouse::animation_frame() const {
-  return animation_.value()/ 125;
+  return moving() ? animation_.value()/ 125 : 0;
+}
+
+bool Mouse::moving() const {
+  return x_ != tx_ || y_ != ty_;
 }
