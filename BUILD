@@ -43,6 +43,7 @@ cc_library(
     deps = [
         "@libgam//:screen",
         "@libgam//:text",
+        ":enemy",
         ":maze",
         ":mouse",
         ":object",
@@ -95,3 +96,17 @@ cc_library(
     srcs = ["rect.cc"],
     hdrs = ["rect.h"],
 );
+
+cc_library(
+    name = "enemy",
+    srcs = ["enemy.cc"],
+    hdrs = ["enemy.h"],
+    deps = [
+        "@libgam//:graphics",
+        "@libgam//:spritemap",
+        ":mouse",
+        ":rect",
+        ":timer",
+    ],
+)
+

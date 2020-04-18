@@ -6,6 +6,7 @@
 
 #include "screen.h"
 
+#include "enemy.h"
 #include "maze.h"
 #include "mouse.h"
 #include "object.h"
@@ -32,6 +33,7 @@ class MazeScreen : public Screen {
     std::unique_ptr<Object> item_;
 
     std::vector<Object> objects_;
+    std::vector<Enemy> enemies_;
     std::mt19937 rand_;
 
     void try_to_move(int direction);

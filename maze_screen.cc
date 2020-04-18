@@ -47,15 +47,47 @@ bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
     std::uniform_int_distribution<int> rx(0, maze_.width() - 1);
     std::uniform_int_distribution<int> ry(0, maze_.height() - 1);
 
-    // Pick a random number 0 - 9 which will be devided by 3
-    // This gives 30% chance each for Cheese, Water, and Leaf, and 10% chance for Mushroom
-    std::uniform_int_distribution<int> rd(0, 9);
+    if (objects_.size() < 3) {
+      // Pick a random number 0 - 9 which will be devided by 3
+      // This gives 30% chance each for Cheese, Water, and Leaf, and 10% chance for Mushroom
+      std::uniform_int_distribution<int> rd(0, 9);
 
-    objects_.emplace_back(static_cast<Object::Type>(rd(rand_) / 3), rx(rand_), ry(rand_));
+      objects_.emplace_back(static_cast<Object::Type>(rd(rand_) / 3), rx(rand_), ry(rand_));
+    }
+
+    if (enemies_.size() < 2) {
+      std::uniform_int_distribution<int> rs(0, 3);
+      std::uniform_int_distribution<int> re(0, 1);
+
+      const int side = rs(rand_);
+
+      switch (side) {
+        case 0:
+          enemies_.emplace_back(static_cast<Enemy::Type>(re(rand_)), rx(rand_), 0);
+          break;
+
+        case 1:
+          enemies_.emplace_back(static_cast<Enemy::Type>(re(rand_)), maze_.width() - 1, ry(rand_));
+          break;
+
+        case 2:
+          enemies_.emplace_back(static_cast<Enemy::Type>(re(rand_)), rx(rand_), maze_.height() - 1);
+          break;
+
+        case 3:
+          enemies_.emplace_back(static_cast<Enemy::Type>(re(rand_)), 0, ry(rand_));
+          break;
+
+      }
+    }
   }
 
   for (auto& o : objects_) {
     o.update(elapsed);
+  }
+
+  for (auto& e : enemies_) {
+    e.update(elapsed, mouse_);
   }
 
   return true;
@@ -65,6 +97,9 @@ void MazeScreen::draw(Graphics& graphics) const {
   maze_.draw(graphics, 0, 16);
   for (const auto& o : objects_) {
     o.draw(graphics, 0, 16);
+  }
+  for (const auto& e : enemies_) {
+    e.draw(graphics, 0, 16);
   }
   mouse_.draw(graphics, 0, 16);
 
