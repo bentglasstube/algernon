@@ -14,6 +14,22 @@ Maze::Maze(int width, int height) :
   std::uniform_int_distribution<int> rx(0, width_);
   std::uniform_int_distribution<int> ry(0, height_);
 
+  // Calculate middle room
+  const int cx = width / 2;
+  const int cy = height / 2;
+
+  // Clear all walls to middle
+  unset({cx, cy}, 0);
+  unset({cx, cy}, 1);
+  unset({cx, cy}, 2);
+  unset({cx, cy}, 3);
+
+  // Clear walls in corners
+  unset({0, 0}, 1);
+  unset({0, height - 1}, 1);
+  unset({width - 1, 0}, 3);
+  unset({width - 1, height - 1}, 3);
+
   // start at a random position in the maze
   frontier_.push({rx(rand_), ry(rand_)});
 }
@@ -35,6 +51,24 @@ void Maze::step() {
       return;
     }
   }
+
+  // Fix up half walls
+
+  // Calculate middle room
+  const int cx = width_ / 2;
+  const int cy = height_ / 2;
+
+  // Clear all walls to middle
+  unset({cx - 1, cy}, 1);
+  unset({cx + 1, cy}, 3);
+  unset({cx, cy - 1}, 2);
+  unset({cx, cy + 1}, 0);
+
+  // Clear walls in corners
+  unset({1, 0}, 3);
+  unset({1, height_ - 1}, 3);
+  unset({width_ - 2, 0}, 1);
+  unset({width_ - 2, height_ - 1}, 1);
 }
 
 bool Maze::done() const {
