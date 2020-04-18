@@ -4,7 +4,6 @@
 #include "text.h"
 
 #include "maze.h"
-#include "mouse.h"
 #include "timer.h"
 
 class TitleScreen : public Screen {
@@ -21,6 +20,5 @@ class TitleScreen : public Screen {
 
     Text text_;
     Maze maze_;
-    Mouse mouse_;
     Timer generator_, flash_;
 };
