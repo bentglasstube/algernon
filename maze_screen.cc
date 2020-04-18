@@ -27,16 +27,15 @@ bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
     }
   }
 
-  // TODO sometimes this doesn't pick things up, improve code
-  std::remove_if( objects_.begin(), objects_.end(),
-      [this](Object& o){
+  objects_.erase(std::remove_if( objects_.begin(), objects_.end(),
+      [this](const Object& o){
         if (o.hitbox().intersect(mouse_.hitbox())) {
           // TODO give powerup
           return true;
         } else {
           return false;
         }
-      });
+      }), objects_.end());
 
   mouse_.update(elapsed);
 
