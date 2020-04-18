@@ -1,7 +1,8 @@
 #pragma once
 
-#include <vector>
+#include <memory>
 #include <random>
+#include <vector>
 
 #include "screen.h"
 
@@ -28,8 +29,11 @@ class MazeScreen : public Screen {
     Mouse mouse_;
     Timer spawner_;
 
+    std::unique_ptr<Object> item_;
+
     std::vector<Object> objects_;
     std::mt19937 rand_;
 
     void try_to_move(int direction);
+    bool powerup(Object::Type type);
 };

@@ -9,12 +9,12 @@ void Object::update(unsigned int elapsed) {
   timer_ += elapsed;
 }
 
-void Object::draw(Graphics& graphics) const {
-  sprites_.draw(graphics, 8 + static_cast<int>(type_), x_, offset_y());
+void Object::draw(Graphics& graphics, int xo, int yo) const {
+  sprites_.draw(graphics, 8 + static_cast<int>(type_), x_ + xo, offset_y() + yo);
 
 #ifndef NDEBUG
   const Rect h = hitbox();
-  SDL_Rect r = {h.left(), h.top(), h.width(), h.height()};
+  SDL_Rect r = {h.left() + xo, h.top() + yo, h.width(), h.height()};
   graphics.draw_rect(&r, 0xd8ff00ff, false);
 #endif
 }

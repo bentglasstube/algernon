@@ -6,9 +6,10 @@
 
 MazeScreen::MazeScreen() :
   text_("text.png"),
-  maze_(16, 15),
+  maze_(16, 14),
   mouse_(0, 0, false),
-  spawner_(5000)
+  spawner_(5000),
+  item_(nullptr)
 {
   maze_.generate();
   rand_.seed(Util::random_seed());
@@ -27,11 +28,12 @@ bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
     }
   }
 
+  if (item_) item_->update(elapsed);
+
   objects_.erase(std::remove_if( objects_.begin(), objects_.end(),
       [this](const Object& o){
         if (o.hitbox().intersect(mouse_.hitbox())) {
-          // TODO give powerup
-          return true;
+          return powerup(o.type());
         } else {
           return false;
         }
@@ -60,11 +62,16 @@ bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
 }
 
 void MazeScreen::draw(Graphics& graphics) const {
-  maze_.draw(graphics, 0, 0);
+  maze_.draw(graphics, 0, 16);
   for (const auto& o : objects_) {
-    o.draw(graphics);
+    o.draw(graphics, 0, 16);
   }
-  mouse_.draw(graphics, 0, 0);
+  mouse_.draw(graphics, 0, 16);
+
+  // TODO draw HUD elements
+  if (item_) {
+    item_->draw(graphics, 120, 0);
+  }
 }
 
 Screen* MazeScreen::next_screen() const {
@@ -82,5 +89,29 @@ void MazeScreen::try_to_move(int direction) {
     case 1: mouse_.set_target(mx + 1, my); break;
     case 2: mouse_.set_target(mx, my + 1); break;
     case 3: mouse_.set_target(mx - 1, my); break;
+  }
+}
+
+bool MazeScreen::powerup(Object::Type type) {
+  switch (type) {
+    case Object::Type::Cheese:
+      // TODO increase mouse satiety
+      return true;
+
+    case Object::Type::Droplet:
+    case Object::Type::Leaf:
+      if (item_) {
+        return false;
+      } else {
+        item_.reset(new Object(type, 0, 0));
+        return true;
+      }
+
+    case Object::Type::Mushroom:
+      // TODO grant invulnerability to mouse
+      return true;
+
+    default:
+      return false;
   }
 }

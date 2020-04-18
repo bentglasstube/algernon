@@ -10,7 +10,7 @@ void Mouse::draw(Graphics& graphics, int xo, int yo) const {
 
 #ifndef NDEBUG
   Rect h = hitbox();
-  SDL_Rect r = {h.left(), h.top(), h.width(), h.height()};
+  SDL_Rect r = {h.left() + xo, h.top() + yo, h.width(), h.height()};
   graphics.draw_rect(&r, 0x234599ff, false);
 #endif
 }

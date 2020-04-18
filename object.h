@@ -13,7 +13,7 @@ class Object {
     Object(Type type, int x, int y);
 
     void update(unsigned int elapsed);
-    void draw(Graphics& graphics) const;
+    void draw(Graphics& graphics, int xo, int yo) const;
 
     Type type() const;
     int mapx() const;
