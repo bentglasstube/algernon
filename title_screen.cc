@@ -18,7 +18,7 @@ bool TitleScreen::update(const Input& input, Audio&, unsigned int elapsed) {
 }
 
 void TitleScreen::draw(Graphics& graphics) const {
-  maze_.draw(graphics);
+  maze_.draw(graphics, 0, 48);
   if (flash_.value() < 500) text_.draw(graphics, "Press any key", 128, 216, Text::Alignment::Center);
 }
 

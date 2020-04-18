@@ -16,7 +16,7 @@ class Maze {
 
     Maze(int width, int height);
 
-    void draw(Graphics& graphics) const;
+    void draw(Graphics& graphics, int xo, int yo) const;
 
     void step();
     bool done() const;

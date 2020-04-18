@@ -98,11 +98,11 @@ bool Maze::done() const {
   return frontier_.empty() && breakup_ == 0;
 }
 
-void Maze::draw(Graphics& graphics) const {
+void Maze::draw(Graphics& graphics, int xo, int yo) const {
   for (int y = 0; y < height_; ++y) {
     for (int x = 0; x < width_; ++x) {
-      tiles_.draw(graphics, 0, 16 * x, 16 * y);
-      tiles_.draw(graphics, at({x, y}), 16 * x, 16 * y);
+      tiles_.draw(graphics, 0, 16 * x + xo, 16 * y + yo);
+      tiles_.draw(graphics, at({x, y}), 16 * x + xo, 16 * y + yo);
     }
   }
 }
