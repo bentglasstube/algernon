@@ -25,7 +25,7 @@ class Maze {
 
     struct Point { int x, y; };
 
-    int width_, height_;
+    int width_, height_, breakup_;
     std::vector<Cell> cells_;
     SpriteMap tiles_;
 

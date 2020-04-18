@@ -30,12 +30,14 @@ Maze::Maze(int width, int height) :
   unset({width - 1, 0}, 3);
   unset({width - 1, height - 1}, 3);
 
+  breakup_ = width * height / 5;
+
   // start at a random position in the maze
   frontier_.push({rx(rand_), ry(rand_)});
 }
 
 void Maze::step() {
-  while (!done()) {
+  while (!frontier_.empty()) {
     auto p = frontier_.top();
 
     std::vector<Point> neighbors = unvisited_neighbors(p);
@@ -69,10 +71,31 @@ void Maze::step() {
   unset({1, height_ - 1}, 3);
   unset({width_ - 2, 0}, 1);
   unset({width_ - 2, height_ - 1}, 1);
+
+  if (breakup_ > 0) {
+    std::uniform_int_distribution<int> rx(1, width_ - 1);
+    std::uniform_int_distribution<int> ry(1, height_ - 1);
+    std::uniform_int_distribution<int> rd(0, 3);
+
+    const int x = rx(rand_);
+    const int y = ry(rand_);
+    const int d = rd(rand_);
+
+    unset({x, y}, d);
+    switch (d) {
+      case 0: unset({x, y - 1}, 2); break;
+      case 1: unset({x + 1, y}, 3); break;
+      case 2: unset({x, y + 1}, 0); break;
+      case 3: unset({x - 1, y}, 1); break;
+    }
+
+    --breakup_;
+    return;
+  }
 }
 
 bool Maze::done() const {
-  return frontier_.empty();
+  return frontier_.empty() && breakup_ == 0;
 }
 
 void Maze::draw(Graphics& graphics) const {
