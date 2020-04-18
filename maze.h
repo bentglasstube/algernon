@@ -19,6 +19,7 @@ class Maze {
     void draw(Graphics& graphics, int xo, int yo) const;
 
     void step();
+    void generate();
     bool done() const;
 
   private:

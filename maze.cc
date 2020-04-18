@@ -94,6 +94,12 @@ void Maze::step() {
   }
 }
 
+void Maze::generate() {
+  while (!done()) {
+    step();
+  }
+}
+
 bool Maze::done() const {
   return frontier_.empty() && breakup_ == 0;
 }
