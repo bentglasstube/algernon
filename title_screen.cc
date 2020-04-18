@@ -1,6 +1,6 @@
 #include "title_screen.h"
 
-TitleScreen::TitleScreen() : text_("text.png"), maze_(16, 14), generator_(50), flash_(1000) {}
+TitleScreen::TitleScreen() : text_("text.png"), maze_(16, 15), generator_(50), flash_(1000) {}
 
 bool TitleScreen::update(const Input& input, Audio&, unsigned int elapsed) {
   flash_.update(elapsed);
