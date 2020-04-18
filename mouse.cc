@@ -9,7 +9,8 @@ void Mouse::draw(Graphics& graphics, int xo, int yo) const {
   sprites_.draw_ex(graphics, animation_frame(), xo + x_, yo + y_, left_, 0, 0, 0);
 
 #ifndef NDEBUG
-  SDL_Rect r = {tx_, ty_, 16, 16};
+  Rect h = hitbox();
+  SDL_Rect r = {h.left(), h.top(), h.width(), h.height()};
   graphics.draw_rect(&r, 0x234599ff, false);
 #endif
 }
@@ -53,4 +54,8 @@ int Mouse::mapx() const {
 
 int Mouse::mapy() const {
   return ty_ / 16;
+}
+
+Rect Mouse::hitbox() const {
+  return { x_ + (left_ ? 1 : 4 ), y_ + 4, 11, 9 };
 }

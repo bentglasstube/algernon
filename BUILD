@@ -74,6 +74,7 @@ cc_library(
     deps = [
         "@libgam//:graphics",
         "@libgam//:spritemap",
+        ":rect",
         ":timer",
     ],
 )
@@ -85,6 +86,12 @@ cc_library(
     deps = [
         "@libgam//:graphics",
         "@libgam//:spritemap",
+        ":rect",
     ],
 )
 
+cc_library(
+    name = "rect",
+    srcs = ["rect.cc"],
+    hdrs = ["rect.h"],
+);

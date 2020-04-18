@@ -2,6 +2,7 @@
 
 #include "spritemap.h"
 
+#include "rect.h"
 #include "timer.h"
 
 class Mouse {
@@ -18,6 +19,8 @@ class Mouse {
 
     int mapx() const;
     int mapy() const;
+
+    Rect hitbox() const;
 
   private:
 

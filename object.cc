@@ -10,11 +10,11 @@ void Object::update(unsigned int elapsed) {
 }
 
 void Object::draw(Graphics& graphics) const {
-  const float dy = 3 * std::sin(timer_ / 500.0f);
-  sprites_.draw(graphics, 8 + static_cast<int>(type_), x_, y_ + dy);
+  sprites_.draw(graphics, 8 + static_cast<int>(type_), x_, offset_y());
 
 #ifndef NDEBUG
-  SDL_Rect r = {x_, y_, 16, 16};
+  const Rect h = hitbox();
+  SDL_Rect r = {h.left(), h.top(), h.width(), h.height()};
   graphics.draw_rect(&r, 0xd8ff00ff, false);
 #endif
 }
@@ -29,4 +29,12 @@ int Object::mapx() const {
 
 int Object::mapy() const {
   return y_ / 16;
+}
+
+Rect Object::hitbox() const {
+  return { x_ + 2, offset_y() + 2, 12, 12 };
+}
+
+float Object::offset_y() const {
+  return y_ + 3 * std::sin(timer_ / 500.0f);
 }

@@ -3,6 +3,8 @@
 #include "graphics.h"
 #include "spritemap.h"
 
+#include "rect.h"
+
 class Object {
   public:
 
@@ -17,10 +19,14 @@ class Object {
     int mapx() const;
     int mapy() const;
 
+    Rect hitbox() const;
+
   private:
 
     Type type_;
     float x_, y_;
     int timer_;
     SpriteMap sprites_;
+
+    float offset_y() const;
 };
