@@ -29,6 +29,9 @@ void Mouse::update(unsigned int elapsed) {
 void Mouse::set_target(int x, int y) {
   tx_ = x * 16;
   ty_ = y * 16;
+
+  if (tx_ < x_) left_ = true;
+  if (tx_ > x_) left_ = false;
 }
 
 int Mouse::animation_frame() const {

@@ -24,7 +24,7 @@ class Mouse {
 
     SpriteMap sprites_;
 
-    static constexpr float kVelocity = 16 / 500.0f;
+    static constexpr float kVelocity = 16 / 250.0f;
 
     int animation_frame() const;
 
