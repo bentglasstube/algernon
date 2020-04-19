@@ -8,140 +8,180 @@ MazeScreen::MazeScreen() :
   text_("text.png"), ui_("ui.png", 4, 8, 8),
   maze_(16, 14), mouse_({0, 0}), spawner_(5000),
   flower_({maze_.width() / 2, maze_.height() / 2}),
-  item_()
+  state_(State::Playing), result_(Result::None),
+  item_(), fadeout_(0)
 {
   maze_.generate();
   rand_.seed(Util::random_seed());
 }
 
 bool MazeScreen::update(const Input& input, Audio& audio, unsigned int elapsed) {
-  if (!mouse_.moving()) {
-    if (input.key_held(Input::Button::Up)) {
-      try_to_move(0);
-    } else if (input.key_held(Input::Button::Right)) {
-      try_to_move(1);
-    } else if (input.key_held(Input::Button::Down)) {
-      try_to_move(2);
-    } else if (input.key_held(Input::Button::Left)) {
-      try_to_move(3);
-    }
-  }
+  switch (state_) {
 
-  if (input.key_pressed(Input::Button::Select) && item_) {
-    item_.reset();
-    audio.play_sample("drop.wav");
-  }
+    case State::Paused:
 
-  for (auto& p : powerups_) { p.update(elapsed); }
-  for (auto& e : enemies_) { e.update(elapsed, mouse_, maze_); }
-  mouse_.update(elapsed, input.key_held(Input::Button::B));
-  flower_.update(elapsed);
-  spawner_.update(elapsed);
+      if (input.key_pressed(Input::Button::Start)) {
+        audio.play_sample("pause.wav");
+        state_ = State::Playing;
+      }
+      break;
 
-  powerups_.erase(std::remove_if( powerups_.begin(), powerups_.end(),
-      [this, &audio](const PowerUp& p){
-        if (p.touching(mouse_)) {
-          return powerup(p.type(), audio);
-        } else {
-          return false;
-        }
-      }), powerups_.end());
+    case State::Outro:
 
-  if (spawner_.fired()) {
-    std::uniform_int_distribution<int> rx(0, maze_.width() - 1);
-    std::uniform_int_distribution<int> ry(0, maze_.height() - 1);
+      fadeout_ += elapsed;
+      break;
 
-    if (powerups_.size() < 5) {
-      // Pick a random number 0 - 9 which will be devided by 3
-      // This gives 30% chance each for Cheese, Water, and Leaf, and 10% chance for Mushroom
-      std::uniform_int_distribution<int> rd(0, 9);
-      const Maze::Point spawn = { rx(rand_), ry(rand_) };
-      powerups_.emplace_back(static_cast<PowerUp::Type>(rd(rand_) / 3), spawn);
-    }
+    case State::Playing:
 
-    if (enemies_.size() < 3) {
-      std::uniform_int_distribution<int> rs(0, 3);
-      std::uniform_int_distribution<int> re(0, 1);
-
-      const int side = rs(rand_);
-
-      Maze::Point spawn = { 0, 0 };
-
-      switch (side) {
-        case 0:
-          spawn.x = rx(rand_);
-          break;
-
-        case 1:
-          spawn.x = maze_.width() - 1;
-          spawn.y = ry(rand_);
-          break;
-
-        case 2:
-          spawn.x = rx(rand_);
-          spawn.y = maze_.height() - 1;
-          break;
-
-        case 3:
-          spawn.y = ry(rand_);
-          break;
+      if (input.key_pressed(Input::Button::Start)) {
+        audio.play_sample("pause.wav");
+        state_ = State::Paused;
       }
 
-      enemies_.emplace_back(static_cast<Enemy::Type>(re(rand_)), spawn);
-    }
-  }
+      if (!mouse_.moving()) {
+        if (input.key_held(Input::Button::Up)) {
+          try_to_move(0);
+        } else if (input.key_held(Input::Button::Right)) {
+          try_to_move(1);
+        } else if (input.key_held(Input::Button::Down)) {
+          try_to_move(2);
+        } else if (input.key_held(Input::Button::Left)) {
+          try_to_move(3);
+        }
+      }
 
-  if (mouse_.touching(flower_) && item_) {
-    switch (item_->type()) {
-      case PowerUp::Type::Droplet:
-        flower_.give_water();
+      if (input.key_pressed(Input::Button::Select) && item_) {
         item_.reset();
-        audio.play_sample("boost.wav");
-        break;
+        audio.play_sample("drop.wav");
+      }
 
-      case PowerUp::Type::Leaf:
-        flower_.give_composte();
-        item_.reset();
-        audio.play_sample("boost.wav");
-        break;
+      for (auto& p : powerups_) { p.update(elapsed); }
+      for (auto& e : enemies_) { e.update(elapsed, mouse_, maze_); }
+      mouse_.update(elapsed, input.key_held(Input::Button::B));
+      flower_.update(elapsed);
+      spawner_.update(elapsed);
 
-      default:
-        break;
-    }
-  }
-
-  if (!mouse_.invulnerable()) {
-    enemies_.erase(std::remove_if( enemies_.begin(), enemies_.end(),
-          [this, &audio](const Enemy& e){
-            if (e.touching(mouse_)) {
-              if (mouse_.powered_up()) {
-                audio.play_sample("bite.wav");
-                return true;
-              } else {
-                mouse_.hurt();
-                audio.play_sample("hurt.wav");
-                return false;
-              }
+      powerups_.erase(std::remove_if( powerups_.begin(), powerups_.end(),
+          [this, &audio](const PowerUp& p){
+            if (p.touching(mouse_)) {
+              return powerup(p.type(), audio);
+            } else {
+              return false;
             }
-            return false;
-          }), enemies_.end());
+          }), powerups_.end());
+
+      if (spawner_.fired()) {
+        std::uniform_int_distribution<int> rx(0, maze_.width() - 1);
+        std::uniform_int_distribution<int> ry(0, maze_.height() - 1);
+
+        if (powerups_.size() < 5) {
+          // Pick a random number 0 - 9 which will be devided by 3
+          // This gives 30% chance each for Cheese, Water, and Leaf, and 10% chance for Mushroom
+          std::uniform_int_distribution<int> rd(0, 9);
+          const Maze::Point spawn = { rx(rand_), ry(rand_) };
+          powerups_.emplace_back(static_cast<PowerUp::Type>(rd(rand_) / 3), spawn);
+        }
+
+        if (enemies_.size() < 3) {
+          std::uniform_int_distribution<int> rs(0, 3);
+          std::uniform_int_distribution<int> re(0, 1);
+
+          const int side = rs(rand_);
+
+          Maze::Point spawn = { 0, 0 };
+
+          switch (side) {
+            case 0:
+              spawn.x = rx(rand_);
+              break;
+
+            case 1:
+              spawn.x = maze_.width() - 1;
+              spawn.y = ry(rand_);
+              break;
+
+            case 2:
+              spawn.x = rx(rand_);
+              spawn.y = maze_.height() - 1;
+              break;
+
+            case 3:
+              spawn.y = ry(rand_);
+              break;
+          }
+
+          enemies_.emplace_back(static_cast<Enemy::Type>(re(rand_)), spawn);
+        }
+      }
+
+      if (mouse_.touching(flower_) && item_) {
+        switch (item_->type()) {
+          case PowerUp::Type::Droplet:
+            flower_.give_water();
+            item_.reset();
+            audio.play_sample("boost.wav");
+            break;
+
+          case PowerUp::Type::Leaf:
+            flower_.give_composte();
+            item_.reset();
+            audio.play_sample("boost.wav");
+            break;
+
+          default:
+            break;
+        }
+      }
+
+      if (!mouse_.invulnerable()) {
+        enemies_.erase(std::remove_if( enemies_.begin(), enemies_.end(),
+              [this, &audio](const Enemy& e){
+                if (e.touching(mouse_)) {
+                  if (mouse_.powered_up()) {
+                    audio.play_sample("bite.wav");
+                    return true;
+                  } else {
+                    mouse_.hurt();
+                    audio.play_sample("hurt.wav");
+                    return false;
+                  }
+                }
+                return false;
+              }), enemies_.end());
+      }
+
+      // Win and loss conditions
+      if (mouse_.lives() <= 0)      set_result(Result::Killed);
+      if (mouse_.satiety() <= 0)    set_result(Result::Starved);
+      if (flower_.nutrients() <= 0) set_result(Result::Stunted);
+      if (flower_.water() <= 0)     set_result(Result::Wilted);
+      if (flower_.growth() >= 4)    set_result(Result::Grew);
+
+      break;
+
   }
 
   return true;
 }
 
 void MazeScreen::draw(Graphics& graphics) const {
-  maze_.draw(graphics, 0, 16);
-  for (const auto& p : powerups_) {
-    p.draw(graphics, 0, 16);
-  }
-  for (const auto& e : enemies_) {
-    e.draw(graphics, 0, 16);
-  }
-  flower_.draw(graphics, 0, 16);
-  mouse_.draw(graphics, 0, 16);
+  maze_.draw(graphics, 0, kHUDHeight);
+  for (const auto& p : powerups_) { p.draw(graphics, 0, kHUDHeight); }
+  for (const auto& e : enemies_) { e.draw(graphics, 0, kHUDHeight); }
+  flower_.draw(graphics, 0, kHUDHeight);
+  mouse_.draw(graphics, 0, kHUDHeight);
 
   draw_ui(graphics);
+
+  if (state_ == State::Paused) {
+    SDL_Rect r = { 0, kHUDHeight, graphics.width(), graphics.height() - kHUDHeight };
+    graphics.draw_rect(&r, 0x00000099, true);
+    text_.draw(graphics, "Paused", 128, 112, Text::Alignment::Center);
+  } else if (state_ == State::Outro) {
+    const int fade = std::min(255, 256 * fadeout_ / 3000) + (result_ == Result::Grew ? 0xffffff00 : 0);
+    SDL_Rect r = {0, 0, graphics.width(), graphics.height()};
+    graphics.draw_rect(&r, fade, true);
+  }
 }
 
 void MazeScreen::draw_ui(Graphics& graphics) const {
@@ -217,4 +257,9 @@ bool MazeScreen::powerup(PowerUp::Type type, Audio& audio) {
     default:
       return false;
   }
+}
+
+void MazeScreen::set_result(Result r) {
+  result_ = r;
+  state_ = State::Outro;
 }

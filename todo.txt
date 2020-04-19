@@ -1,8 +1,8 @@
-Win/Loss Conditions
-Growth rate affected by plant health
-Spiders attack flower
+Powerups Despawn
 Title Sequence
 Music
 Instructions
-Multi-room
 Improved Spawning
+Growth rate affected by plant health
+Spiders attack flower
+Multi-room

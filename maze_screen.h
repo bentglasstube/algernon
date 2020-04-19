@@ -27,6 +27,11 @@ class MazeScreen : public Screen {
 
   private:
 
+    static constexpr int kHUDHeight = 16;
+
+    enum class State { Playing, Paused, Outro };
+    enum class Result { None, Killed, Starved, Stunted, Wilted, Grew };
+
     Text text_;
     SpriteMap ui_;
 
@@ -34,8 +39,10 @@ class MazeScreen : public Screen {
     Mouse mouse_;
     Timer spawner_;
     Flower flower_;
-
+    State state_;
+    Result result_;
     std::unique_ptr<PowerUp> item_;
+    int fadeout_;
 
     std::vector<PowerUp> powerups_;
     std::vector<Enemy> enemies_;
@@ -46,4 +53,5 @@ class MazeScreen : public Screen {
 
     void draw_ui(Graphics& graphics) const;
     void histogram(Graphics& graphics, int base, float value, int x, int y, bool reverse) const;
+    void set_result(Result r);
 };
