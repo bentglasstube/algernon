@@ -1,5 +1,7 @@
 #pragma once
 
+#include <SDL2/SDL.h>
+
 class Rect {
   public:
     Rect(float x, float y, float w, float h);
@@ -16,6 +18,8 @@ class Rect {
 
     float width() const;
     float height() const;
+
+    SDL_Rect offset_sdl_rect(int xo, int yo) const;
 
   private:
 

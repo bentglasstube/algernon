@@ -4,19 +4,7 @@ Mouse::Mouse(int x, int y) : MobileEntity(x, y), animation_(240) {}
 
 void Mouse::update(unsigned int elapsed) {
   animation_.update(elapsed);
-
-  const float delta = kVelocity * elapsed;
-
-  if (x_ < tx_) {
-    x_ = std::min(x_ + delta, tx_);
-  } else if (x_ > tx_) {
-    x_ = std::max(x_ - delta, tx_);
-  } else if (y_ < ty_) {
-    y_ = std::min(y_ + delta, ty_);
-  } else if (y_ > ty_) {
-    y_ = std::max(y_ - delta, ty_);
-  }
-
+  move_toward_target(elapsed, kVelocity);
 }
 
 int Mouse::frame() const {

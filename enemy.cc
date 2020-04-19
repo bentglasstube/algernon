@@ -3,38 +3,28 @@
 #include "util.h"
 
 Enemy::Enemy(Enemy::Type type, int x, int y) :
-  type_(type),
-  x_(x * 16), y_(y * 16), tx_(x_), ty_(y_),
-  timer_(400), left_(false), charging_(false),
-  idle_timer_(250),
-  sprites_("objects.png", 4, 16, 16)
+  MobileEntity(x, y), type_(type),
+  timer_(400), charging_(false), idle_timer_(250)
 {
   rand_.seed(Util::random_seed());
 }
 
 void Enemy::update(unsigned int elapsed, const Mouse& mouse, const Maze& maze) {
   timer_.update(elapsed);
+  move_toward_target(elapsed, speed());
 
-  const float delta = speed() * elapsed;
-
-  if (x_ < tx_) {
-    left_ = false;
-    x_ = std::min(x_ + delta, tx_);
-  } else if (x_ > tx_) {
-    left_ = true;
-    x_ = std::max(x_ - delta, tx_);
-  } else if (y_ < ty_) {
-    y_ = std::min(y_ + delta, ty_);
-  } else if (y_ > ty_) {
-    y_ = std::max(y_ - delta, ty_);
-  }
-
-  if (x_ == tx_ && y_ == ty_) {
+  if (!moving()) {
+    // Wait for idle timer if needed
     if (idle_timer_ > 0) {
       idle_timer_ -= elapsed;
+
+    // Spiders should move randomly and then wait
     } else if (type_ == Type::Spider) {
       idle_timer_ = 250;
       move_adjacent(maze);
+
+    // Snakes should charge the mouse if they see it
+    // but they also need to rest if they just charged
     } else if (type_ == Type::Snake) {
       if (charging_) {
         idle_timer_ = 500;
@@ -49,29 +39,7 @@ void Enemy::update(unsigned int elapsed, const Mouse& mouse, const Maze& maze) {
 
 }
 
-void Enemy::draw(Graphics& graphics, int xo, int yo) const {
-  sprites_.draw_ex(graphics, animation_frame(), x_ + xo, y_ + yo, left_, 0, 0, 0);
-
-#ifndef NDEBUG
-  Rect h = hitbox();
-  SDL_Rect r = {h.left() + xo, h.top() + yo, h.width(), h.height()};
-  graphics.draw_rect(&r, 0x4488ccff, false);
-#endif
-}
-
-bool Enemy::touching(const Mouse& mouse) const {
-  return hitbox().intersect(mouse.hitbox());
-}
-
-Rect Enemy::hitbox() const {
-  switch (type_) {
-    case Type::Snake: return { x_ + (left_ ? 1 : 6), y_ + 1, 9, 14 };
-    case Type::Spider: return { x_ + 5, y_ + 4, 6, 7 };
-    default: return { x_, y_, 16, 16 };
-  }
-}
-
-int Enemy::animation_frame() const {
+int Enemy::frame() const {
   switch (type_) {
     case Type::Snake: return timer_.value() > 200 ? 4 : 5;
     case Type::Spider: return timer_.value() > 200 ? 6 : 7;
@@ -85,10 +53,6 @@ float Enemy::speed() const {
     case Type::Snake: return 16 / 300.0f * (charging_ ? 2 : 1);
     default: return 16 / 500.0f;
   }
-}
-
-Maze::Point Enemy::pos() const {
-  return { (int)(tx_ / 16), (int)(ty_ / 16) };
 }
 
 void Enemy::move_adjacent(const Maze& maze) {

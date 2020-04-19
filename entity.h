@@ -11,7 +11,7 @@ class Entity {
 
     Entity(int x, int y);
 
-    virtual void update(unsigned int elapsed) = 0;
+    virtual void update(unsigned int) {}
     virtual void draw(Graphics& graphics, int xo, int yo) const;
 
     virtual Rect hitbox() const;
@@ -35,6 +35,8 @@ class MobileEntity : public Entity {
     virtual void draw(Graphics& graphics, int xo, int yo) const;
     bool moving() const;
     void set_target(int x, int y);
+
+    void move_toward_target(unsigned int elapsed, float speed);
 
   protected:
     float tx_, ty_;

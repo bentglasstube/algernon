@@ -19,3 +19,7 @@ bool Rect::intersect(const Rect& other) const {
 
   return true;
 }
+
+SDL_Rect Rect::offset_sdl_rect(int xo, int yo) const {
+  return { (int)(left() + xo), (int)(top() + yo), (int)width(), (int)height() };
+}
