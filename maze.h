@@ -34,6 +34,10 @@ class Maze {
     void add_title_steps();
     void open_middle();
 
+    Point random_pos();
+    Point random_edge_pos();
+    Point center_pos() const { return { width_ / 2, height_ / 2 }; }
+
   private:
 
     typedef std::vector<Point> Letter;

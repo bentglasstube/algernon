@@ -168,3 +168,26 @@ void Maze::open_middle() {
   open_wall({cx, cy}, {cx, cy - 1});
   open_wall({cx, cy}, {cx, cy + 1});
 }
+
+Maze::Point Maze::random_pos() {
+  std::uniform_int_distribution<int> rx(0, width_ - 1);
+  std::uniform_int_distribution<int> ry(0, height_ - 1);
+
+  return { rx(rand_), ry(rand_) };
+}
+
+Maze::Point Maze::random_edge_pos() {
+  std::uniform_int_distribution<int> rx(0, width_ - 1);
+  std::uniform_int_distribution<int> ry(0, height_ - 1);
+  std::uniform_int_distribution<int> rs(0, 3);
+
+  const int side = rs(rand_);
+  switch (side) {
+    case 0: return { rx(rand_), 0 };
+    case 1: return { width_ - 1, ry(rand_) };
+    case 2: return { rx(rand_), height_ - 1 };
+    case 3: return { 0, ry(rand_) };
+  }
+
+  return { -1, -1 };
+}
