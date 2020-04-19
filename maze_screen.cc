@@ -5,12 +5,10 @@
 #include "util.h"
 
 MazeScreen::MazeScreen() :
-  text_("text.png"),
-  maze_(16, 14),
-  mouse_({0, 0}),
-  spawner_(5000),
+  text_("text.png"), ui_("ui.png", 4, 8, 8),
+  maze_(16, 14), mouse_({0, 0}), spawner_(5000),
   flower_({maze_.width() / 2, maze_.height() / 2}),
-  item_(nullptr)
+  item_()
 {
   maze_.generate();
   rand_.seed(Util::random_seed());
@@ -34,7 +32,6 @@ bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
   mouse_.update(elapsed);
   flower_.update(elapsed);
   spawner_.update(elapsed);
-  if (item_) item_->update(elapsed);
 
   powerups_.erase(std::remove_if( powerups_.begin(), powerups_.end(),
       [this](const PowerUp& p){
@@ -122,9 +119,37 @@ void MazeScreen::draw(Graphics& graphics) const {
   flower_.draw(graphics, 0, 16);
   mouse_.draw(graphics, 0, 16);
 
-  // TODO draw HUD elements
+  draw_ui(graphics);
+}
+
+void MazeScreen::draw_ui(Graphics& graphics) const {
   if (item_) {
+    ui_.draw(graphics, 1, 112, 0);
+    ui_.draw(graphics, 2, 112, 8);
+    ui_.draw_ex(graphics, 1, 136, 0, true, 0, 0, 0);
+    ui_.draw_ex(graphics, 2, 136, 8, true, 0, 0, 0);
+
     item_->draw(graphics, 120, 0);
+  }
+
+  histogram(graphics, 0, 3, 0, 0, false); // TODO track lives
+  histogram(graphics, 12, 5, 0, 8, false); // TODO track satiety
+  histogram(graphics, 4, flower_.water(), 248, 0, true);
+  histogram(graphics, 8, flower_.nutrients(), 248, 8, true);
+
+#ifndef NDEBUG
+  text_.draw(graphics, "W: " + std::to_string((int)std::round(flower_.water() * 100)), 0, 192);
+  text_.draw(graphics, "N: " + std::to_string((int)std::round(flower_.nutrients() * 100)), 0, 208);
+  text_.draw(graphics, "G: " + std::to_string((int)std::round(flower_.growth() * 100)), 0, 224);
+#endif
+}
+
+void MazeScreen::histogram(Graphics& graphics, int base, float value, int x, int y, bool reverse) const {
+  int v = std::round(value * -4);
+  for (int i = 0; i < 8; ++i) {
+    v += 4;
+    const int n = base + std::max(0, std::min(3, v));
+    ui_.draw(graphics, n, x + i * (reverse ? -8 : 8), y);
   }
 }
 

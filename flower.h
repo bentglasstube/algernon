@@ -18,7 +18,7 @@ class Flower : public Entity {
 
   private:
 
-    static constexpr float kDecayRate = 1 / 5000.0f;      // 1 point every 5 seconds
+    static constexpr float kDecayRate = 1 / 20000.0f;     // 1 point every 20 seconds
     static constexpr float kGrowthRate = 4 / 300000.0f;   // 4 points over 5 minutes
 
     float water_, nutrients_, growth_;

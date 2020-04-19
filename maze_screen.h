@@ -5,13 +5,14 @@
 #include <vector>
 
 #include "screen.h"
+#include "spritemap.h"
+#include "text.h"
 
 #include "enemy.h"
 #include "flower.h"
 #include "maze.h"
 #include "mouse.h"
 #include "powerup.h"
-#include "text.h"
 #include "timer.h"
 
 class MazeScreen : public Screen {
@@ -27,6 +28,8 @@ class MazeScreen : public Screen {
   private:
 
     Text text_;
+    SpriteMap ui_;
+
     Maze maze_;
     Mouse mouse_;
     Timer spawner_;
@@ -40,4 +43,7 @@ class MazeScreen : public Screen {
 
     void try_to_move(int direction);
     bool powerup(PowerUp::Type type);
+
+    void draw_ui(Graphics& graphics) const;
+    void histogram(Graphics& graphics, int base, float value, int x, int y, bool reverse) const;
 };

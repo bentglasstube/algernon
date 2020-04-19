@@ -1,6 +1,9 @@
-HUD
+Mouse running
+Drop items
 Enemy collisions
 Win/Loss Conditions
+Growth rate affected by plant health
+Mouse movement speed affected by satiety
 Title Sequence
 Music
 Instructions
