@@ -2,8 +2,8 @@
 
 #include "util.h"
 
-Enemy::Enemy(Enemy::Type type, int x, int y) :
-  MobileEntity(x, y), type_(type),
+Enemy::Enemy(Enemy::Type type, Maze::Point p) :
+  MobileEntity(p), type_(type),
   timer_(400), charging_(false), idle_timer_(250)
 {
   rand_.seed(Util::random_seed());

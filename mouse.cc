@@ -1,6 +1,6 @@
 #include "mouse.h"
 
-Mouse::Mouse(int x, int y) : MobileEntity(x, y), animation_(240) {}
+Mouse::Mouse(Maze::Point p) : MobileEntity(p), animation_(240) {}
 
 void Mouse::update(unsigned int elapsed) {
   animation_.update(elapsed);

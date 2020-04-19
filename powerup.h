@@ -7,7 +7,7 @@ class PowerUp : public Entity {
 
     enum class Type { Cheese, Droplet, Leaf, Mushroom };
 
-    PowerUp(Type type, int x, int y);
+    PowerUp(Type type, Maze::Point p);
 
     void update(unsigned int elapsed) override;
 

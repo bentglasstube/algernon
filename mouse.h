@@ -6,7 +6,7 @@
 class Mouse : public MobileEntity {
   public:
 
-    Mouse(int x, int y);
+    Mouse(Maze::Point p);
 
     void update(unsigned int elapsed) override;
     Rect hitbox() const override;

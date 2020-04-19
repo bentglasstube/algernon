@@ -5,7 +5,7 @@
 class Flower : public Entity {
   public:
 
-    Flower(int x, int y);
+    Flower(Maze::Point p);
 
     void update(unsigned int elapsed) override;
 

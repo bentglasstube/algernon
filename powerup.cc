@@ -1,6 +1,6 @@
 #include "powerup.h"
 
-PowerUp::PowerUp(PowerUp::Type type, int x, int y) : Entity(x, y), type_(type), timer_(0) {}
+PowerUp::PowerUp(PowerUp::Type type, Maze::Point p) : Entity(p), type_(type), timer_(0) {}
 
 void PowerUp::update(unsigned int elapsed) {
   timer_ += elapsed;

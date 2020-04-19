@@ -1,6 +1,6 @@
 #include "entity.h"
 
-Entity::Entity(int x, int y) : x_(x * 16), y_(y * 16), sprites_("objects.png", 4, 16, 16) {}
+Entity::Entity(Maze::Point p) : x_(p.x * 16), y_(p.y * 16), sprites_("objects.png", 4, 16, 16) {}
 
 void Entity::draw(Graphics& graphics, int xo, int yo) const {
   sprites_.draw(graphics, frame(), x() + xo, y() + yo);
@@ -19,7 +19,7 @@ Maze::Point Entity::pos() const {
   return {(int)(x_ / 16), (int)(y_ / 16)};
 }
 
-MobileEntity::MobileEntity(int x, int y) : Entity(x, y), tx_(x_), ty_(y_), left_(false) {}
+MobileEntity::MobileEntity(Maze::Point p) : Entity(p), tx_(x_), ty_(y_), left_(false) {}
 
 void MobileEntity::draw(Graphics& graphics, int xo, int yo) const {
   sprites_.draw_ex(graphics, frame(), xo + x_, yo + y_, left_, 0, 0, 0);
@@ -34,9 +34,9 @@ bool MobileEntity::moving() const {
   return x_ != tx_ || y_ != ty_;
 }
 
-void MobileEntity::set_target(int x, int y) {
-  tx_ = x * 16;
-  ty_ = y * 16;
+void MobileEntity::set_target(Maze::Point p) {
+  tx_ = p.x * 16;
+  ty_ = p.y * 16;
 }
 
 void MobileEntity::move_toward_target(unsigned int elapsed, float speed) {

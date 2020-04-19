@@ -9,7 +9,7 @@
 class Entity {
   public:
 
-    Entity(int x, int y);
+    Entity(Maze::Point p);
 
     virtual void update(unsigned int) {}
     virtual void draw(Graphics& graphics, int xo, int yo) const;
@@ -31,11 +31,11 @@ class Entity {
 class MobileEntity : public Entity {
   public:
 
-    MobileEntity(int x, int y);
+    MobileEntity(Maze::Point p);
 
     virtual void draw(Graphics& graphics, int xo, int yo) const;
     bool moving() const;
-    void set_target(int x, int y);
+    void set_target(Maze::Point p);
 
     void move_toward_target(unsigned int elapsed, float speed);
 

@@ -7,9 +7,9 @@
 MazeScreen::MazeScreen() :
   text_("text.png"),
   maze_(16, 14),
-  mouse_(0, 0),
+  mouse_({0, 0}),
   spawner_(5000),
-  flower_(maze_.width() / 2, maze_.height() / 2),
+  flower_({maze_.width() / 2, maze_.height() / 2}),
   item_(nullptr)
 {
   maze_.generate();
@@ -53,7 +53,8 @@ bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
       // Pick a random number 0 - 9 which will be devided by 3
       // This gives 30% chance each for Cheese, Water, and Leaf, and 10% chance for Mushroom
       std::uniform_int_distribution<int> rd(0, 9);
-      powerups_.emplace_back(static_cast<PowerUp::Type>(rd(rand_) / 3), rx(rand_), ry(rand_));
+      const Maze::Point spawn = { rx(rand_), ry(rand_) };
+      powerups_.emplace_back(static_cast<PowerUp::Type>(rd(rand_) / 3), spawn);
     }
 
     if (enemies_.size() < 3) {
@@ -62,24 +63,29 @@ bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
 
       const int side = rs(rand_);
 
+      Maze::Point spawn = { 0, 0 };
+
       switch (side) {
         case 0:
-          enemies_.emplace_back(static_cast<Enemy::Type>(re(rand_)), rx(rand_), 0);
+          spawn.x = rx(rand_);
           break;
 
         case 1:
-          enemies_.emplace_back(static_cast<Enemy::Type>(re(rand_)), maze_.width() - 1, ry(rand_));
+          spawn.x = maze_.width() - 1;
+          spawn.y = ry(rand_);
           break;
 
         case 2:
-          enemies_.emplace_back(static_cast<Enemy::Type>(re(rand_)), rx(rand_), maze_.height() - 1);
+          spawn.x = rx(rand_);
+          spawn.y = maze_.height() - 1;
           break;
 
         case 3:
-          enemies_.emplace_back(static_cast<Enemy::Type>(re(rand_)), 0, ry(rand_));
+          spawn.y = ry(rand_);
           break;
-
       }
+
+      enemies_.emplace_back(static_cast<Enemy::Type>(re(rand_)), spawn);
     }
   }
 
@@ -132,10 +138,10 @@ void MazeScreen::try_to_move(int direction) {
   if (maze_.wall(mp, direction)) return;
 
   switch (direction) {
-    case 0: mouse_.set_target(mp.x, mp.y - 1); break;
-    case 1: mouse_.set_target(mp.x + 1, mp.y); break;
-    case 2: mouse_.set_target(mp.x, mp.y + 1); break;
-    case 3: mouse_.set_target(mp.x - 1, mp.y); break;
+    case 0: mouse_.set_target({mp.x, mp.y - 1}); break;
+    case 1: mouse_.set_target({mp.x + 1, mp.y}); break;
+    case 2: mouse_.set_target({mp.x, mp.y + 1}); break;
+    case 3: mouse_.set_target({mp.x - 1, mp.y}); break;
   }
 }
 
@@ -150,7 +156,7 @@ bool MazeScreen::powerup(PowerUp::Type type) {
       if (item_) {
         return false;
       } else {
-        item_.reset(new PowerUp(type, 0, 0));
+        item_.reset(new PowerUp(type, {0, 0}));
         return true;
       }
 

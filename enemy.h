@@ -11,7 +11,7 @@ class Enemy : public MobileEntity {
 
     enum class Type { Snake, Spider };
 
-    Enemy(Type type, int x, int y);
+    Enemy(Type type, Maze::Point p);
 
     void update(unsigned int elapsed, const Mouse& mouse, const Maze& maze);
 
