@@ -1,4 +1,3 @@
-Mouse running
 Drop items
 Enemy collisions
 Win/Loss Conditions

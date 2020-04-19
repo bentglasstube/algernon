@@ -29,7 +29,7 @@ bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
 
   for (auto& p : powerups_) { p.update(elapsed); }
   for (auto& e : enemies_) { e.update(elapsed, mouse_, maze_); }
-  mouse_.update(elapsed);
+  mouse_.update(elapsed, input.key_held(Input::Button::B));
   flower_.update(elapsed);
   spawner_.update(elapsed);
 
@@ -132,8 +132,8 @@ void MazeScreen::draw_ui(Graphics& graphics) const {
     item_->draw(graphics, 120, 0);
   }
 
-  histogram(graphics, 0, 3, 0, 0, false); // TODO track lives
-  histogram(graphics, 12, 5, 0, 8, false); // TODO track satiety
+  histogram(graphics, 0, mouse_.lives(), 0, 0, false);
+  histogram(graphics, 12, mouse_.satiety(), 0, 8, false);
   histogram(graphics, 4, flower_.water(), 248, 0, true);
   histogram(graphics, 8, flower_.nutrients(), 248, 8, true);
 
@@ -173,7 +173,7 @@ void MazeScreen::try_to_move(int direction) {
 bool MazeScreen::powerup(PowerUp::Type type) {
   switch (type) {
     case PowerUp::Type::Cheese:
-      // TODO increase mouse satiety
+      mouse_.feed();
       return true;
 
     case PowerUp::Type::Droplet:
