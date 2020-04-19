@@ -23,14 +23,6 @@ Object::Type Object::type() const {
   return type_;
 }
 
-int Object::mapx() const {
-  return x_ / 16;
-}
-
-int Object::mapy() const {
-  return y_ / 16;
-}
-
 Rect Object::hitbox() const {
   return { x_ + 2, offset_y() + 2, 12, 12 };
 }

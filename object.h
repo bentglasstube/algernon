@@ -16,9 +16,6 @@ class Object {
     void draw(Graphics& graphics, int xo, int yo) const;
 
     Type type() const;
-    int mapx() const;
-    int mapy() const;
-
     Rect hitbox() const;
 
   private:
