@@ -2,6 +2,7 @@ Title Sequence
 Music
 Instructions
 Improved Spawning
+Enemy Departure
 Growth rate affected by plant health
 Spiders attack flower
-Multi-room
+Multi-room (Hard mode)

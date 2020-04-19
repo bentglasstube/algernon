@@ -5,7 +5,7 @@
 class Flower : public Entity {
   public:
 
-    Flower(Maze::Point p);
+    Flower(Maze::Point p) : Entity(p), water_(5), nutrients_(5), growth_(0) {}
 
     void update(unsigned int elapsed);
 

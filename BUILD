@@ -43,9 +43,10 @@ cc_library(
     deps = [
         "@libgam//:screen",
         "@libgam//:text",
-        ":maze",
+        ":appearing_text",
         ":entities",
-        ":timer",
+        ":maze",
+        ":timer"
     ],
 )
 
@@ -97,3 +98,16 @@ cc_library(
     srcs = ["rect.cc"],
     hdrs = ["rect.h"],
 );
+
+cc_library(
+    name = "appearing_text",
+    srcs = ["appearing_text.cc"],
+    hdrs = ["appearing_text.h"],
+    deps = [
+        "@libgam//:audio",
+        "@libgam//:graphics",
+        "@libgam//:text",
+    ],
+);
+
+

@@ -4,12 +4,14 @@
 
 #include "util.h"
 
+#include "title_screen.h"
+
 MazeScreen::MazeScreen() :
-  text_("text.png"), ui_("ui.png", 4, 8, 8),
+  text_("text.png"), black_text_("black_text.png"),
+  ui_("ui.png", 4, 8, 8), endings_("ending.png", 1, 160, 112),
   maze_(16, 14), mouse_({0, 0}), spawner_(5000),
   flower_({maze_.width() / 2, maze_.height() / 2}),
-  state_(State::Playing), result_(Result::None),
-  item_(), fadeout_(0)
+  state_(State::Playing), result_(Result::None), fadeout_(0)
 {
   maze_.generate();
   rand_.seed(Util::random_seed());
@@ -28,7 +30,14 @@ bool MazeScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
 
     case State::Outro:
 
-      fadeout_ += elapsed;
+      if (fadeout_ > kFadeTime) {
+        story_->update(audio, elapsed);
+      } else {
+        fadeout_ += elapsed;
+      }
+
+      if (story_->done() && input.any_pressed()) return false;
+
       break;
 
     case State::Playing:
@@ -171,13 +180,21 @@ void MazeScreen::draw(Graphics& graphics) const {
   draw_ui(graphics);
 
   if (state_ == State::Paused) {
+
     SDL_Rect r = { 0, kHUDHeight, graphics.width(), graphics.height() - kHUDHeight };
     graphics.draw_rect(&r, 0x00000099, true);
     text_.draw(graphics, "Paused", 128, 112, Text::Alignment::Center);
+
   } else if (state_ == State::Outro) {
-    const int fade = std::min(255, 256 * fadeout_ / 3000) + (result_ == Result::Grew ? 0xffffff00 : 0);
+
+    const int fade = std::min(255, 256 * fadeout_ / kFadeTime) + (result_ == Result::Grew ? 0xffffff00 : 0);
     SDL_Rect r = {0, 0, graphics.width(), graphics.height()};
     graphics.draw_rect(&r, fade, true);
+
+    if (fadeout_ > kFadeTime) {
+      story_->draw(graphics, (result_ == Result::Grew ? black_text_ : text_), 0, 176);
+      endings_.draw(graphics, kEnding.at(result_).first, 48, 48);
+    }
   }
 }
 
@@ -207,13 +224,12 @@ void MazeScreen::histogram(Graphics& graphics, int base, float value, int x, int
   int v = std::round(value * -4);
   for (int i = 0; i < 8; ++i) {
     v += 4;
-    const int n = base + std::max(0, std::min(3, v));
-    ui_.draw(graphics, n, x + i * (reverse ? -8 : 8), y);
+    ui_.draw(graphics, base + Util::clamp(v, 0, 3), x + i * (reverse ? -8 : 8), y);
   }
 }
 
 Screen* MazeScreen::next_screen() const {
-  return nullptr;
+  return new TitleScreen();
 }
 
 void MazeScreen::try_to_move(int direction) {
@@ -259,4 +275,14 @@ bool MazeScreen::powerup(PowerUp::Type type, Audio& audio) {
 void MazeScreen::set_result(Result r) {
   result_ = r;
   state_ = State::Outro;
+  story_.reset(new AppearingText(kEnding.at(result_).second));
 }
+
+const std::unordered_map<MazeScreen::Result, std::pair<int, std::string>, Util::CastHash<MazeScreen::Result>> MazeScreen::kEnding = {
+  { Result::None,    { -1, "How did you get here?" }},
+  { Result::Killed,  { 0, "Alas, poor Algernon was killed\nby the monsters that lurked in\nthe laboratory." }},
+  { Result::Starved, { 0, "Poor Algernon was so focused on\nkeeping his flower alive that he\nforgot to eat." }},
+  { Result::Wilted,  { 2, "Try as he might, Algernon could\nnot keep his flower alive." }},
+  { Result::Stunted, { 2, "Try as he might, Algernon could\nnot keep his flower alive." }},
+  { Result::Grew,    { 1, "Algernon took care of his flower\nmeticulously.  In the end, it\ngrew strong and beautiful." }},
+};
