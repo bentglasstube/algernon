@@ -1,5 +1,7 @@
 #include "maze.h"
 
+#include <algorithm>
+
 #include "util.h"
 
 Maze::Maze(int width, int height) :
@@ -14,22 +16,6 @@ Maze::Maze(int width, int height) :
   std::uniform_int_distribution<int> rx(0, width_ - 1);
   std::uniform_int_distribution<int> ry(0, height_ - 1);
 
-  // Calculate middle room
-  const int cx = width / 2;
-  const int cy = height / 2;
-
-  // Clear all walls to middle
-  unset({cx, cy}, 0);
-  unset({cx, cy}, 1);
-  unset({cx, cy}, 2);
-  unset({cx, cy}, 3);
-
-  // Clear walls in corners
-  unset({0, 0}, 1);
-  unset({0, height - 1}, 1);
-  unset({width - 1, 0}, 3);
-  unset({width - 1, height - 1}, 3);
-
   breakup_ = width * height / 5;
 
   // start at a random position in the maze
@@ -37,6 +23,19 @@ Maze::Maze(int width, int height) :
 }
 
 void Maze::step() {
+  while (!letters_.empty()) {
+    auto& letter = letters_.back();
+
+    if (letter.size() > 1) {
+      auto a = letter.back();
+      letter.pop_back();
+      open_wall(a, letter.back());
+      return;
+    } else {
+      letters_.pop_back();
+    }
+  }
+
   while (!frontier_.empty()) {
     auto p = frontier_.top();
 
@@ -53,24 +52,6 @@ void Maze::step() {
       return;
     }
   }
-
-  // Fix up half walls
-
-  // Calculate middle room
-  const int cx = width_ / 2;
-  const int cy = height_ / 2;
-
-  // Clear all walls to middle
-  unset({cx - 1, cy}, 1);
-  unset({cx + 1, cy}, 3);
-  unset({cx, cy - 1}, 2);
-  unset({cx, cy + 1}, 0);
-
-  // Clear walls in corners
-  unset({1, 0}, 3);
-  unset({1, height_ - 1}, 3);
-  unset({width_ - 2, 0}, 1);
-  unset({width_ - 2, height_ - 1}, 1);
 
   if (breakup_ > 0) {
     std::uniform_int_distribution<int> rx(1, width_ - 2);
@@ -149,4 +130,41 @@ bool Maze::straight_path(Maze::Point a, Maze::Point b) const {
   } else {
     return false;
   }
+}
+
+void Maze::add_title_steps() {
+  /* A */ letters_.push_back({{0,3},{1,3},{1,4},{1,5},{1,6},{0,6},{0,5},{0,4},{1,4}});
+  /* l */ letters_.push_back({{2,3},{2,4},{2,5},{2,6}});
+  /* g */ letters_.push_back({{4,5},{3,5},{3,4},{3,3},{4,3},{4,4},{4,5},{4,6},{3,6}});
+  /* e */ letters_.push_back({{6,6},{5,6},{5,5},{6,5},{6,4},{6,3},{5,3},{5,4},{5,5}});
+  /* r */ letters_.push_back({{7,6},{7,5},{7,4},{7,3},{8,3}});
+  /* n */ letters_.push_back({{8,6},{8,5},{8,4},{9,4},{9,5},{9,6}});
+  /* o */ letters_.push_back({{10,5},{10,4},{11,4},{11,5},{11,6},{10,6},{10,5}});
+  /* n */ letters_.push_back({{13,6},{13,5},{13,4},{12,4},{12,5},{12,6}});
+  /* s */ letters_.push_back({{14,6},{15,6},{15,5},{14,5},{14,4},{15,4}});
+  /* f */ letters_.push_back({{3,7},{2,7},{2,8},{3,8},{2,8},{2,9},{2,10}});
+  /* l */ letters_.push_back({{4,7},{4,8},{4,9},{4,10}});
+  /* o */ letters_.push_back({{6,9},{6,8},{5,8},{5,9},{5,10},{6,10},{6,9}});
+  /* w */ letters_.push_back({{8,8},{8,9},{8,10},{7,10},{7,9},{7,8},{7,9},{7,10},{8,10},{9,10},{9,9},{9,8}});
+  /* e */ letters_.push_back({{11,8},{11,7},{10,7},{10,8},{10,9},{11,9},{11,8},{11,9},{10,9},{10,10},{11,10}});
+  /* r */ letters_.push_back({{13,7},{12,7},{12,8},{12,9},{12,10}});
+
+  std::shuffle(letters_.begin(), letters_.end(), rand_);
+
+  frontier_.pop();
+  frontier_.push({9,3});
+  frontier_.push({3,9});
+  frontier_.push({5,7});
+
+  breakup_ = 0;
+}
+
+void Maze::open_middle() {
+  const int cx = width_ / 2;
+  const int cy = height_ / 2;
+
+  open_wall({cx, cy}, {cx - 1, cy});
+  open_wall({cx, cy}, {cx + 1, cy});
+  open_wall({cx, cy}, {cx, cy - 1});
+  open_wall({cx, cy}, {cx, cy + 1});
 }

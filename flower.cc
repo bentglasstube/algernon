@@ -3,5 +3,5 @@
 void Flower::update(unsigned int elapsed) {
   water_ = std::max(0.0f, water_ - kDecayRate * elapsed);
   nutrients_ = std::max(0.0f, nutrients_ - kDecayRate * elapsed);
-  growth_ += std::min(8.0f, kGrowthRate * elapsed);
+  growth_ += std::min(4.0f, kGrowthRate * elapsed);
 }

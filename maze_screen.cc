@@ -14,6 +14,7 @@ MazeScreen::MazeScreen() :
   state_(State::Playing), result_(Result::None), fadeout_(0)
 {
   maze_.generate();
+  maze_.open_middle();
   rand_.seed(Util::random_seed());
 }
 

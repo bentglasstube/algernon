@@ -23,6 +23,6 @@ class Flower : public Entity {
 
     float water_, nutrients_, growth_;
 
-    int frame() const override { return (int)(24 + growth_); }
+    int frame() const override { return 24 + std::min((int)growth_, 3); }
 
 };

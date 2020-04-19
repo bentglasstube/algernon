@@ -42,6 +42,8 @@ cc_library(
     ],
     deps = [
         "@libgam//:screen",
+        "@libgam//:sprite",
+        "@libgam//:spritemap",
         "@libgam//:text",
         ":appearing_text",
         ":entities",

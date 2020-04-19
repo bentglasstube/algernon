@@ -1,8 +1,10 @@
 #pragma once
 
 #include "screen.h"
+#include "sprite.h"
 #include "text.h"
 
+#include "flower.h"
 #include "maze.h"
 #include "timer.h"
 
@@ -19,6 +21,9 @@ class TitleScreen : public Screen {
   private:
 
     Text text_;
+    Sprite title_;
+    Flower flower_;
+
     Maze maze_;
     Timer generator_, flash_;
 };

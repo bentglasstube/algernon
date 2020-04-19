@@ -22,6 +22,7 @@ class Maze {
     void step();
     void generate() { while (!done()) { step(); } }
     bool done() const { return frontier_.empty() && breakup_ == 0; }
+    bool letters_done() const { return letters_.empty(); }
 
     bool wall(Point p, int dir) const;
 
@@ -30,12 +31,18 @@ class Maze {
 
     bool straight_path(Point a, Point b) const;
 
+    void add_title_steps();
+    void open_middle();
+
   private:
+
+    typedef std::vector<Point> Letter;
 
     int width_, height_, breakup_;
     std::vector<Cell> cells_;
     SpriteMap tiles_;
 
+    std::vector<Letter> letters_;
     std::stack<Point> frontier_;
     std::mt19937 rand_;
 
