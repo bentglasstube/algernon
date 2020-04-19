@@ -7,7 +7,7 @@
 MazeScreen::MazeScreen() :
   text_("text.png"),
   maze_(16, 14),
-  mouse_(0, 0, false),
+  mouse_(0, 0),
   spawner_(5000),
   item_(nullptr)
 {

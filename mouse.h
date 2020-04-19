@@ -1,37 +1,22 @@
 #pragma once
 
-#include "spritemap.h"
-
-#include "maze.h"
-#include "rect.h"
+#include "entity.h"
 #include "timer.h"
 
-class Mouse {
+class Mouse : public MobileEntity {
   public:
 
-    Mouse(int x, int y, bool left);
+    Mouse(int x, int y);
 
-    void draw(Graphics& graphics, int xo, int yo) const;
-    void update(unsigned int elapsed);
-
-    void set_target(int x, int y);
-
-    bool moving() const;
-
-    Maze::Point pos() const;
-
-    Rect hitbox() const;
+    void update(unsigned int elapsed) override;
+    Rect hitbox() const override;
 
   private:
 
-    float x_, y_, tx_, ty_;
-    Timer animation_;
-    bool left_;
-
-    SpriteMap sprites_;
-
     static constexpr float kVelocity = 16 / 250.0f;
 
-    int animation_frame() const;
+    Timer animation_;
+
+    int frame() const override;
 
 };

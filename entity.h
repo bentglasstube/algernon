@@ -14,7 +14,7 @@ class Entity {
     virtual void update(unsigned int elapsed) = 0;
     virtual void draw(Graphics& graphics, int xo, int yo) const;
 
-    Rect hitbox() const;
+    virtual Rect hitbox() const;
     Maze::Point pos() const;
 
   protected:
@@ -25,4 +25,18 @@ class Entity {
     virtual float y() const { return y_; }
 
     virtual int frame() const { return 0; }
+};
+
+class MobileEntity : public Entity {
+  public:
+
+    MobileEntity(int x, int y);
+
+    virtual void draw(Graphics& graphics, int xo, int yo) const;
+    bool moving() const;
+    void set_target(int x, int y);
+
+  protected:
+    float tx_, ty_;
+    bool left_;
 };
