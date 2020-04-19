@@ -1,4 +1,3 @@
-Powerups Despawn
 Title Sequence
 Music
 Instructions

@@ -63,11 +63,8 @@ bool MazeScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
 
       powerups_.erase(std::remove_if( powerups_.begin(), powerups_.end(),
           [this, &audio](const PowerUp& p){
-            if (p.touching(mouse_)) {
-              return powerup(p.type(), audio);
-            } else {
-              return false;
-            }
+            if (p.touching(mouse_)) return powerup(p.type(), audio);
+            return p.despawn();
           }), powerups_.end());
 
       if (spawner_.fired()) {

@@ -10,10 +10,16 @@ class PowerUp : public Entity {
     PowerUp(Type type, Maze::Point p) : Entity(p), type_(type), timer_(0) {};
 
     void update(unsigned int elapsed) { timer_ += elapsed; }
+    void draw(Graphics& graphics, int xo, int yo) const override;
 
     Type type() const { return type_; }
+    bool despawn() const { return timer_ >= kDespawnTime; }
 
   private:
+
+    static constexpr int kDespawnTime = 30000;
+    static constexpr int kBlinkTime = 5000;
+    static constexpr int kBlinkRate = 125;
 
     Type type_;
     int timer_;
