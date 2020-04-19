@@ -87,7 +87,7 @@ bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
   }
 
   for (auto& e : enemies_) {
-    e.update(elapsed, mouse_);
+    e.update(elapsed, mouse_, maze_);
   }
 
   return true;

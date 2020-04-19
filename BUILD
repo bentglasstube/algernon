@@ -105,6 +105,7 @@ cc_library(
     deps = [
         "@libgam//:graphics",
         "@libgam//:spritemap",
+        ":maze",
         ":mouse",
         ":rect",
         ":timer",

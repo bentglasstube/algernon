@@ -5,9 +5,8 @@ Enemy::Enemy(Enemy::Type type, int x, int y) :
   sprites_("objects.png", 4, 16, 16)
 {}
 
-void Enemy::update(unsigned int elapsed, const Mouse& mouse) {
+void Enemy::update(unsigned int elapsed, const Mouse& mouse, const Maze& maze) {
   timer_.update(elapsed);
-  // TODO implement enemy AI
 }
 
 void Enemy::draw(Graphics& graphics, int xo, int yo) const {
