@@ -28,6 +28,8 @@ class Maze {
     int width() const;
     int height() const;
 
+    bool straight_path(Point a, Point b) const;
+
   private:
 
     int width_, height_, breakup_;

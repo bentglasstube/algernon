@@ -160,3 +160,23 @@ int Maze::width() const {
 int Maze::height() const {
   return height_;
 }
+
+bool Maze::straight_path(Maze::Point a, Maze::Point b) const {
+  if (a.x == b.x) {
+    const int y1 = std::min(a.y, b.y);
+    const int y2 = std::max(a.y, b.y);
+    for (int y = y1; y < y2; ++y) {
+      if (wall({a.x, y}, 2)) return false;
+    }
+    return true;
+  } else if (a.y == b.y) {
+    const int x1 = std::min(a.x, b.x);
+    const int x2 = std::max(a.x, b.x);
+    for (int x = x1; x < x2; ++x) {
+      if (wall({x, a.y}, 1)) return false;
+    }
+    return true;
+  } else {
+    return false;
+  }
+}
