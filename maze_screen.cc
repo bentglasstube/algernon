@@ -9,8 +9,8 @@
 MazeScreen::MazeScreen() :
   text_("text.png"), black_text_("black_text.png"),
   ui_("ui.png", 4, 8, 8), endings_("ending.png", 1, 160, 112),
-  maze_(16, 14), mouse_({0, 0}), spawner_(5000),
-  flower_({maze_.width() / 2, maze_.height() / 2}),
+  maze_(16, 14), spawner_(5000),
+  mouse_({maze_.width() / 2, maze_.height() / 2}), flower_(mouse_.pos()),
   state_(State::Playing), result_(Result::None), fadeout_(0)
 {
   maze_.generate();

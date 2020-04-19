@@ -41,8 +41,8 @@ class MazeScreen : public Screen {
     SpriteMap endings_;
 
     Maze maze_;
-    Mouse mouse_;
     Timer spawner_;
+    Mouse mouse_;
     Flower flower_;
     State state_;
     Result result_;
