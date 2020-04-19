@@ -9,12 +9,14 @@ class Mouse : public MobileEntity {
     Mouse(Maze::Point p);
 
     void update(unsigned int elapsed, bool running);
+    void draw(Graphics& graphics, int xo, int yo) const override;
     Rect hitbox() const override { return { x_ + (left_ ? 1 : 4 ), y_ + 4, 11, 9 }; }
     float satiety() const { return satiety_; }
     int lives() const { return lives_; }
 
     void feed() { satiety_ = std::min(8.0f, satiety_ + 1); }
-    void kill() { lives_--; }
+    void hurt();
+    bool invulnerable() { return iframes_ > 0; }
 
   private:
 
@@ -23,7 +25,7 @@ class Mouse : public MobileEntity {
 
     Timer animation_;
     float satiety_;
-    int lives_;
+    int lives_, iframes_;
 
     int frame() const override { return moving() ? animation_.value() / 60 : 0; }
 

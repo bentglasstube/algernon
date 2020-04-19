@@ -110,7 +110,14 @@ bool MazeScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
     }
   }
 
-  // TODO enemy collisions
+  if (!mouse_.invulnerable()) {
+    for (const auto& e : enemies_ ) {
+      if (e.touching(mouse_)) {
+        mouse_.hurt();
+        audio.play_sample("hurt.wav");
+      }
+    }
+  }
 
   return true;
 }
