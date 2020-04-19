@@ -7,17 +7,17 @@ class PowerUp : public Entity {
 
     enum class Type { Cheese, Droplet, Leaf, Mushroom };
 
-    PowerUp(Type type, Maze::Point p);
+    PowerUp(Type type, Maze::Point p) : Entity(p), type_(type), timer_(0) {};
 
-    void update(unsigned int elapsed) override;
+    void update(unsigned int elapsed) override { timer_ += elapsed; }
 
-    Type type() const;
+    Type type() const { return type_; }
 
   private:
 
     Type type_;
     int timer_;
 
-    float y() const override;
-    int frame() const override;
+    float y() const override { return y_ + 3 * std::sin(timer_ / 500.0f); }
+    int frame() const override { return 8 + static_cast<int>(type_); }
 };

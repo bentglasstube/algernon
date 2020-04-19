@@ -73,7 +73,6 @@ cc_library(
         "entity.cc",
         "flower.cc",
         "mouse.cc",
-        "powerup.cc",
     ],
     hdrs = [
         "enemy.h",

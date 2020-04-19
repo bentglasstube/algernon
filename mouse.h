@@ -9,7 +9,7 @@ class Mouse : public MobileEntity {
     Mouse(Maze::Point p);
 
     void update(unsigned int elapsed) override;
-    Rect hitbox() const override;
+    Rect hitbox() const override { return { x_ + (left_ ? 1 : 4 ), y_ + 4, 11, 9 }; }
 
   private:
 
@@ -17,6 +17,6 @@ class Mouse : public MobileEntity {
 
     Timer animation_;
 
-    int frame() const override;
+    int frame() const override { return moving() ? animation_.value() / 60 : 0; }
 
 };

@@ -94,16 +94,6 @@ void Maze::step() {
   }
 }
 
-void Maze::generate() {
-  while (!done()) {
-    step();
-  }
-}
-
-bool Maze::done() const {
-  return frontier_.empty() && breakup_ == 0;
-}
-
 bool Maze::wall(Maze::Point p, int dir) const {
   if (!valid(p)) return true;
   return cells_[p.y * width_ + p.x].test(dir);
@@ -116,14 +106,6 @@ void Maze::draw(Graphics& graphics, int xo, int yo) const {
       tiles_.draw(graphics, at({x, y}), 16 * x + xo, 16 * y + yo);
     }
   }
-}
-
-bool Maze::valid(Maze::Point p) const {
-  return p.x >= 0 && p.x < width_ && p.y >= 0 && p.y < height_;
-}
-
-uint8_t Maze::at(Point p) const {
-  return valid(p) ? cells_[p.y * width_ + p.x].to_ulong() : 31;
 }
 
 std::vector<Maze::Point> Maze::unvisited_neighbors(Maze::Point p) const {
@@ -147,18 +129,6 @@ void Maze::open_wall(Maze::Point a, Maze::Point b) {
   } else if (b.y == a.y + 1 && b.x == a.x) {
     unset(a, 2); unset(b, 0);
   }
-}
-
-void Maze::unset(Maze::Point p, uint8_t bit) {
-  if (valid(p)) cells_[p.y * width_ + p.x].reset(bit);
-}
-
-int Maze::width() const {
-  return width_;
-}
-
-int Maze::height() const {
-  return height_;
 }
 
 bool Maze::straight_path(Maze::Point a, Maze::Point b) const {

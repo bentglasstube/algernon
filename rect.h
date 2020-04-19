@@ -4,20 +4,20 @@
 
 class Rect {
   public:
-    Rect(float x, float y, float w, float h);
+    Rect(float x, float y, float w, float h) : x_(x), y_(y), w_(w), h_(h) {}
 
     bool intersect(const Rect& other) const;
 
-    float top() const;
-    float left() const;
-    float right() const;
-    float bottom() const;
+    float top() const { return y_; }
+    float left() const { return x_; }
+    float right() const { return x_ + w_; }
+    float bottom() const { return y_ + h_; }
 
-    float xmid() const;
-    float ymid() const;
+    float xmid() const { return x_ + w_ / 2.0f; }
+    float ymid() const { return y_ + h_ / 2.0f; }
 
-    float width() const;
-    float height() const;
+    float width() const { return w_; }
+    float height() const { return h_; }
 
     SDL_Rect offset_sdl_rect(int xo, int yo) const;
 

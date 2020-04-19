@@ -4,11 +4,12 @@ class Timer {
 
   public:
 
-    Timer(unsigned int interval);
+    Timer(unsigned int interval) : value_(0), interval_(interval) {}
+
     void update(unsigned int elapsed);
 
-    bool fired() const;
-    unsigned int value() const;
+    bool fired() const { return overflow_; }
+    unsigned int value() const { return value_; }
 
   private:
 

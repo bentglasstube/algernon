@@ -11,14 +11,6 @@ void Entity::draw(Graphics& graphics, int xo, int yo) const {
 #endif
 }
 
-Rect Entity::hitbox() const {
-  return { x() + 2, y() + 2, 12, 12 };
-}
-
-Maze::Point Entity::pos() const {
-  return {(int)(x_ / 16), (int)(y_ / 16)};
-}
-
 MobileEntity::MobileEntity(Maze::Point p) : Entity(p), tx_(x_), ty_(y_), left_(false) {}
 
 void MobileEntity::draw(Graphics& graphics, int xo, int yo) const {
@@ -28,15 +20,6 @@ void MobileEntity::draw(Graphics& graphics, int xo, int yo) const {
   SDL_Rect r = hitbox().offset_sdl_rect(xo, yo);
   graphics.draw_rect(&r, 0x234599ff, false);
 #endif
-}
-
-bool MobileEntity::moving() const {
-  return x_ != tx_ || y_ != ty_;
-}
-
-void MobileEntity::set_target(Maze::Point p) {
-  tx_ = p.x * 16;
-  ty_ = p.y * 16;
 }
 
 void MobileEntity::move_toward_target(unsigned int elapsed, float speed) {
