@@ -78,47 +78,8 @@ bool MazeScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
           }), powerups_.end());
 
       if (spawner_.fired()) {
-        std::uniform_int_distribution<int> rx(0, maze_.width() - 1);
-        std::uniform_int_distribution<int> ry(0, maze_.height() - 1);
-
-        if (powerups_.size() < 5) {
-          // Pick a random number 0 - 9 which will be devided by 3
-          // This gives 30% chance each for Cheese, Water, and Leaf, and 10% chance for Mushroom
-          std::uniform_int_distribution<int> rd(0, 9);
-          const Maze::Point spawn = { rx(rand_), ry(rand_) };
-          powerups_.emplace_back(static_cast<PowerUp::Type>(rd(rand_) / 3), spawn);
-        }
-
-        if (enemies_.size() < 3) {
-          std::uniform_int_distribution<int> rs(0, 3);
-          std::uniform_int_distribution<int> re(0, 1);
-
-          const int side = rs(rand_);
-
-          Maze::Point spawn = { 0, 0 };
-
-          switch (side) {
-            case 0:
-              spawn.x = rx(rand_);
-              break;
-
-            case 1:
-              spawn.x = maze_.width() - 1;
-              spawn.y = ry(rand_);
-              break;
-
-            case 2:
-              spawn.x = rx(rand_);
-              spawn.y = maze_.height() - 1;
-              break;
-
-            case 3:
-              spawn.y = ry(rand_);
-              break;
-          }
-
-          enemies_.emplace_back(static_cast<Enemy::Type>(re(rand_)), spawn);
-        }
+        if (powerups_.size() < 5) spawn_powerup();
+        if (enemies_.size() < 3) spawn_enemy();
       }
 
       if (mouse_.touching(flower_) && item_) {
@@ -293,3 +254,47 @@ const std::unordered_map<MazeScreen::Result, std::pair<int, std::string>, Util::
   { Result::Stunted, { 2, "Try as he might, Algernon could\nnot keep his flower alive." }},
   { Result::Grew,    { 1, "Algernon took care of his flower\nmeticulously.  In the end, it\ngrew strong and beautiful." }},
 };
+
+void MazeScreen::spawn_powerup() {
+  std::uniform_int_distribution<int> rx(0, maze_.width() - 1);
+  std::uniform_int_distribution<int> ry(0, maze_.height() - 1);
+
+  // Pick a random number 0 - 9 which will be devided by 3
+  // This gives 30% chance each for Cheese, Water, and Leaf, and 10% chance for Mushroom
+  std::uniform_int_distribution<int> rd(0, 9);
+  const Maze::Point spawn = { rx(rand_), ry(rand_) };
+  powerups_.emplace_back(static_cast<PowerUp::Type>(rd(rand_) / 3), spawn);
+}
+
+void MazeScreen::spawn_enemy() {
+  std::uniform_int_distribution<int> rx(0, maze_.width() - 1);
+  std::uniform_int_distribution<int> ry(0, maze_.height() - 1);
+  std::uniform_int_distribution<int> rs(0, 3);
+  std::uniform_int_distribution<int> re(0, 1);
+
+  const int side = rs(rand_);
+
+  Maze::Point spawn = { 0, 0 };
+
+  switch (side) {
+    case 0:
+      spawn.x = rx(rand_);
+      break;
+
+    case 1:
+      spawn.x = maze_.width() - 1;
+      spawn.y = ry(rand_);
+      break;
+
+    case 2:
+      spawn.x = rx(rand_);
+      spawn.y = maze_.height() - 1;
+      break;
+
+    case 3:
+      spawn.y = ry(rand_);
+      break;
+  }
+
+  enemies_.emplace_back(static_cast<Enemy::Type>(re(rand_)), spawn);
+}

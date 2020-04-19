@@ -61,4 +61,7 @@ class MazeScreen : public Screen {
     void histogram(Graphics& graphics, int base, float value, int x, int y, bool reverse) const;
     void set_result(Audio& audio, Result r);
     int ending() const;
+
+    void spawn_powerup();
+    void spawn_enemy();
 };
