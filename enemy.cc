@@ -74,3 +74,11 @@ void Enemy::charge_position(Maze::Point p) {
   ty_ = p.y * 16;
   charging_ = true;
 }
+
+Rect Enemy::hitbox() const {
+  switch (type_) {
+    case Type::Snake: return { x_ + (left_ ? 1 : 6), y_ + 1, 9, 14 };
+    case Type::Spider: return { x_ + 5, y_ + 4, 6, 7 };
+    default: return MobileEntity::hitbox();
+  }
+}

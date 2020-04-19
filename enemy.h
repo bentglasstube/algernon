@@ -14,6 +14,7 @@ class Enemy : public MobileEntity {
     Enemy(Type type, Maze::Point p);
 
     void update(unsigned int elapsed, const Mouse& mouse, const Maze& maze);
+    Rect hitbox() const override;
 
   private:
 
