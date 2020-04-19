@@ -9,7 +9,7 @@ class PowerUp : public Entity {
 
     PowerUp(Type type, Maze::Point p) : Entity(p), type_(type), timer_(0) {};
 
-    void update(unsigned int elapsed) override { timer_ += elapsed; }
+    void update(unsigned int elapsed) { timer_ += elapsed; }
 
     Type type() const { return type_; }
 

@@ -7,7 +7,7 @@ class Flower : public Entity {
 
     Flower(Maze::Point p);
 
-    void update(unsigned int elapsed) override;
+    void update(unsigned int elapsed);
 
     float water() const { return water_; }
     float nutrients() const { return nutrients_; }

@@ -11,7 +11,6 @@ class Entity {
 
     Entity(Maze::Point p);
 
-    virtual void update(unsigned int) {}
     virtual void draw(Graphics& graphics, int xo, int yo) const;
 
     virtual Rect hitbox() const { return { x() + 2, y() + 2, 12, 12 }; }

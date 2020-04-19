@@ -8,7 +8,7 @@ class Mouse : public MobileEntity {
 
     Mouse(Maze::Point p);
 
-    void update(unsigned int elapsed) override;
+    void update(unsigned int elapsed);
     Rect hitbox() const override { return { x_ + (left_ ? 1 : 4 ), y_ + 4, 11, 9 }; }
 
   private:
