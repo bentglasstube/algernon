@@ -114,16 +114,15 @@ Screen* MazeScreen::next_screen() const {
 }
 
 void MazeScreen::try_to_move(int direction) {
-  const int mx = mouse_.mapx();
-  const int my = mouse_.mapy();
+  auto mp = mouse_.pos();
 
-  if (maze_.wall(mx, my, direction)) return;
+  if (maze_.wall(mp, direction)) return;
 
   switch (direction) {
-    case 0: mouse_.set_target(mx, my - 1); break;
-    case 1: mouse_.set_target(mx + 1, my); break;
-    case 2: mouse_.set_target(mx, my + 1); break;
-    case 3: mouse_.set_target(mx - 1, my); break;
+    case 0: mouse_.set_target(mp.x, mp.y - 1); break;
+    case 1: mouse_.set_target(mp.x + 1, mp.y); break;
+    case 2: mouse_.set_target(mp.x, mp.y + 1); break;
+    case 3: mouse_.set_target(mp.x - 1, mp.y); break;
   }
 }
 

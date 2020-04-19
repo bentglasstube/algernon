@@ -2,6 +2,7 @@
 
 #include "spritemap.h"
 
+#include "maze.h"
 #include "rect.h"
 #include "timer.h"
 
@@ -17,8 +18,7 @@ class Mouse {
 
     bool moving() const;
 
-    int mapx() const;
-    int mapy() const;
+    Maze::Point pos() const;
 
     Rect hitbox() const;
 

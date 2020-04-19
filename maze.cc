@@ -104,9 +104,9 @@ bool Maze::done() const {
   return frontier_.empty() && breakup_ == 0;
 }
 
-bool Maze::wall(int x, int y, int dir) const {
-  if (!valid({x, y})) return true;
-  return cells_[y * width_ + x].test(dir);
+bool Maze::wall(Maze::Point p, int dir) const {
+  if (!valid(p)) return true;
+  return cells_[p.y * width_ + p.x].test(dir);
 }
 
 void Maze::draw(Graphics& graphics, int xo, int yo) const {

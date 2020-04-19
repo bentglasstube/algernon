@@ -48,12 +48,8 @@ bool Mouse::moving() const {
   return x_ != tx_ || y_ != ty_;
 }
 
-int Mouse::mapx() const {
-  return tx_ / 16;
-}
-
-int Mouse::mapy() const {
-  return ty_ / 16;
+Maze::Point Mouse::pos() const {
+  return { (int)(tx_ / 16), (int)(ty_ / 16) };
 }
 
 Rect Mouse::hitbox() const {

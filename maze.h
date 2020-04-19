@@ -13,6 +13,7 @@ class Maze {
   public:
 
     typedef std::bitset<4> Cell;
+    struct Point { int x, y; };
 
     Maze(int width, int height);
 
@@ -22,14 +23,12 @@ class Maze {
     void generate();
     bool done() const;
 
-    bool wall(int x, int y, int dir) const;
+    bool wall(Point p, int dir) const;
 
     int width() const;
     int height() const;
 
   private:
-
-    struct Point { int x, y; };
 
     int width_, height_, breakup_;
     std::vector<Cell> cells_;
