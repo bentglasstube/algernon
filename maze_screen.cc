@@ -123,6 +123,7 @@ bool MazeScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
                 return false;
               }
             }
+            return false;
           }), enemies_.end());
   }
 
