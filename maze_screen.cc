@@ -27,6 +27,10 @@ bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
     }
   }
 
+  if (input.key_pressed(Input::Button::Select)) {
+    if (item_) item_.reset();
+  }
+
   for (auto& p : powerups_) { p.update(elapsed); }
   for (auto& e : enemies_) { e.update(elapsed, mouse_, maze_); }
   mouse_.update(elapsed, input.key_held(Input::Button::B));

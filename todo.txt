@@ -1,4 +1,3 @@
-Drop items
 Enemy collisions
 Win/Loss Conditions
 Growth rate affected by plant health
