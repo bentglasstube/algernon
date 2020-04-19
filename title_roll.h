@@ -17,6 +17,8 @@ class TitleRoll {
     class Entry {
       public:
         Entry() : text_("text.png"), sprites_("objects.png", 4, 16, 16) {}
+        virtual ~Entry() {}
+
         virtual int height() const = 0;
         virtual void draw(Graphics& graphics, int y) const = 0;
         virtual void update(unsigned int) {}

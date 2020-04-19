@@ -12,6 +12,7 @@ class Enemy : public MobileEntity {
     enum class Type { Snake, Spider };
 
     Enemy(Type type, Maze::Point p);
+    virtual ~Enemy() {}
 
     void update(unsigned int elapsed, const Mouse& mouse, const Maze& maze);
     Rect hitbox() const override;

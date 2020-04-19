@@ -7,7 +7,8 @@ class PowerUp : public Entity {
 
     enum class Type { Cheese, Droplet, Leaf, Mushroom };
 
-    PowerUp(Type type, Maze::Point p) : Entity(p), type_(type), timer_(0) {};
+    PowerUp(Type type, Maze::Point p) : Entity(p), type_(type), timer_(0) {}
+    virtual ~PowerUp() {}
 
     void update(unsigned int elapsed) { timer_ += elapsed; }
     void draw(Graphics& graphics, int xo, int yo) const override;

@@ -9,7 +9,7 @@ class AppearingText {
 
     AppearingText(const std::string& text);
 
-    void update(Audio& audio, unsigned int elapsed) { count_ += elapsed; }
+    void update(Audio&, unsigned int elapsed) { count_ += elapsed; }
     void draw(Graphics& graphics, const Text& text, int x, int y) const;
 
     bool done() const { return count_ / kLetterRate > text_.length(); }
