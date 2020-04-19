@@ -7,6 +7,7 @@
 #include "flower.h"
 #include "maze.h"
 #include "timer.h"
+#include "title_roll.h"
 
 class TitleScreen : public Screen {
   public:
@@ -20,10 +21,17 @@ class TitleScreen : public Screen {
 
   private:
 
+    static constexpr int kScrollDelay = 10000;
+    static constexpr float kScrollRate = 16 / 1000.0f;
+
     Text text_;
     Sprite title_;
     Flower flower_;
 
     Maze maze_;
     Timer generator_, flash_;
+
+    int scroll_timer_;
+    float scroll_;
+    TitleRoll roll_;
 };

@@ -48,7 +48,8 @@ cc_library(
         ":appearing_text",
         ":entities",
         ":maze",
-        ":timer"
+        ":timer",
+        ":title_roll",
     ],
 )
 
@@ -112,4 +113,14 @@ cc_library(
     ],
 );
 
-
+cc_library(
+    name = "title_roll",
+    srcs = ["title_roll.cc"],
+    hdrs = ["title_roll.h"],
+    deps = [
+        "@libgam//:graphics",
+        "@libgam//:spritemap",
+        "@libgam//:text",
+        ":timer",
+    ],
+);

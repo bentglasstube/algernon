@@ -1,6 +1,4 @@
-Title Sequence
 Music
-Instructions
 Improved Spawning
 Enemy Departure
 Growth rate affected by plant health
