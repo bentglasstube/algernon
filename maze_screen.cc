@@ -195,6 +195,7 @@ bool MazeScreen::powerup(PowerUp::Type type, Audio& audio) {
   switch (type) {
     case PowerUp::Type::Cheese:
       mouse_.feed();
+      audio.play_sample("pickup.wav");
       return true;
 
     case PowerUp::Type::Droplet:
