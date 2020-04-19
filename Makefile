@@ -7,8 +7,8 @@ SOURCES=$(wildcard *.cc) $(wildcard gam/*.cc)
 CONTENT=$(wildcard content/*.png) $(wildcard content/*.ogg) $(wildcard content/*.wav)
 BUILDDIR=$(CROSS)output
 OBJECTS=$(patsubst %.cc,$(BUILDDIR)/%.o,$(SOURCES))
-NAME=eeprom
-APP_NAME=EEPROM
+NAME=algernon
+APP_NAME=Algernon
 VERSION=$(shell git describe --tags --dirty)
 
 CC=$(CROSS)g++
