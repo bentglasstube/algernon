@@ -16,6 +16,7 @@ class Entity {
 
     virtual Rect hitbox() const;
     Maze::Point pos() const;
+    bool touching(const Entity& other) const { return hitbox().intersect(other.hitbox()); }
 
   protected:
     float x_, y_;

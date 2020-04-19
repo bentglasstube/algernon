@@ -7,6 +7,7 @@
 #include "screen.h"
 
 #include "enemy.h"
+#include "flower.h"
 #include "maze.h"
 #include "mouse.h"
 #include "powerup.h"
@@ -29,6 +30,7 @@ class MazeScreen : public Screen {
     Maze maze_;
     Mouse mouse_;
     Timer spawner_;
+    Flower flower_;
 
     std::unique_ptr<PowerUp> item_;
 

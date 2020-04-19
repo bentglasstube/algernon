@@ -71,12 +71,14 @@ cc_library(
     srcs = [
         "enemy.cc",
         "entity.cc",
+        "flower.cc",
         "mouse.cc",
         "powerup.cc",
     ],
     hdrs = [
         "enemy.h",
         "entity.h",
+        "flower.h",
         "mouse.h",
         "powerup.h",
     ],

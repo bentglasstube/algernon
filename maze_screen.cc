@@ -9,6 +9,7 @@ MazeScreen::MazeScreen() :
   maze_(16, 14),
   mouse_(0, 0),
   spawner_(5000),
+  flower_(maze_.width() / 2, maze_.height() / 2),
   item_(nullptr)
 {
   maze_.generate();
@@ -28,33 +29,34 @@ bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
     }
   }
 
+  for (auto& p : powerups_) { p.update(elapsed); }
+  for (auto& e : enemies_) { e.update(elapsed, mouse_, maze_); }
+  mouse_.update(elapsed);
+  flower_.update(elapsed);
+  spawner_.update(elapsed);
   if (item_) item_->update(elapsed);
 
   powerups_.erase(std::remove_if( powerups_.begin(), powerups_.end(),
       [this](const PowerUp& p){
-        if (p.hitbox().intersect(mouse_.hitbox())) {
+        if (p.touching(mouse_)) {
           return powerup(p.type());
         } else {
           return false;
         }
       }), powerups_.end());
 
-  mouse_.update(elapsed);
-
-  spawner_.update(elapsed);
-
   if (spawner_.fired()) {
     std::uniform_int_distribution<int> rx(0, maze_.width() - 1);
     std::uniform_int_distribution<int> ry(0, maze_.height() - 1);
 
-    if (powerups_.size() < 3) {
+    if (powerups_.size() < 5) {
       // Pick a random number 0 - 9 which will be devided by 3
       // This gives 30% chance each for Cheese, Water, and Leaf, and 10% chance for Mushroom
       std::uniform_int_distribution<int> rd(0, 9);
       powerups_.emplace_back(static_cast<PowerUp::Type>(rd(rand_) / 3), rx(rand_), ry(rand_));
     }
 
-    if (enemies_.size() < 2) {
+    if (enemies_.size() < 3) {
       std::uniform_int_distribution<int> rs(0, 3);
       std::uniform_int_distribution<int> re(0, 1);
 
@@ -81,13 +83,24 @@ bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
     }
   }
 
-  for (auto& p : powerups_) {
-    p.update(elapsed);
+  if (mouse_.touching(flower_) && item_) {
+    switch (item_->type()) {
+      case PowerUp::Type::Droplet:
+        flower_.give_water();
+        item_.reset();
+        break;
+
+      case PowerUp::Type::Leaf:
+        flower_.give_composte();
+        item_.reset();
+        break;
+
+      default:
+        break;
+    }
   }
 
-  for (auto& e : enemies_) {
-    e.update(elapsed, mouse_, maze_);
-  }
+  // TODO enemy collisions
 
   return true;
 }
@@ -100,6 +113,7 @@ void MazeScreen::draw(Graphics& graphics) const {
   for (const auto& e : enemies_) {
     e.draw(graphics, 0, 16);
   }
+  flower_.draw(graphics, 0, 16);
   mouse_.draw(graphics, 0, 16);
 
   // TODO draw HUD elements

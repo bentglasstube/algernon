@@ -5,7 +5,7 @@
 class PowerUp : public Entity {
   public:
 
-    enum class Type { Cheese, Droplet, Leaf, Mushroom, Seed };
+    enum class Type { Cheese, Droplet, Leaf, Mushroom };
 
     PowerUp(Type type, int x, int y);
 

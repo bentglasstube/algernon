@@ -1,5 +1,8 @@
-Flower
+Refactor to use Maze::Point
+Inline method cleanup
+Remove virtual update
 HUD
+Enemy collisions
 Win/Loss Conditions
 Title Sequence
 Music
