@@ -43,10 +43,8 @@ cc_library(
     deps = [
         "@libgam//:screen",
         "@libgam//:text",
-        ":enemy",
         ":maze",
-        ":mouse",
-        ":object",
+        ":entities",
         ":timer",
     ],
 )
@@ -69,26 +67,26 @@ cc_library(
 )
 
 cc_library(
-    name = "mouse",
-    srcs = ["mouse.cc"],
-    hdrs = ["mouse.h"],
+    name = "entities",
+    srcs = [
+        "enemy.cc",
+        "entity.cc",
+        "mouse.cc",
+        "powerup.cc",
+    ],
+    hdrs = [
+        "enemy.h",
+        "entity.h",
+        "mouse.h",
+        "powerup.h",
+    ],
     deps = [
         "@libgam//:graphics",
         "@libgam//:spritemap",
+        "@libgam//:util",
         ":maze",
         ":rect",
         ":timer",
-    ],
-)
-
-cc_library(
-    name = "object",
-    srcs = ["object.cc"],
-    hdrs = ["object.h"],
-    deps = [
-        "@libgam//:graphics",
-        "@libgam//:spritemap",
-        ":rect",
     ],
 )
 
@@ -97,19 +95,3 @@ cc_library(
     srcs = ["rect.cc"],
     hdrs = ["rect.h"],
 );
-
-cc_library(
-    name = "enemy",
-    srcs = ["enemy.cc"],
-    hdrs = ["enemy.h"],
-    deps = [
-        "@libgam//:graphics",
-        "@libgam//:spritemap",
-        "@libgam//:util",
-        ":maze",
-        ":mouse",
-        ":rect",
-        ":timer",
-    ],
-)
-

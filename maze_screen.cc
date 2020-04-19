@@ -30,14 +30,14 @@ bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
 
   if (item_) item_->update(elapsed);
 
-  objects_.erase(std::remove_if( objects_.begin(), objects_.end(),
-      [this](const Object& o){
-        if (o.hitbox().intersect(mouse_.hitbox())) {
-          return powerup(o.type());
+  powerups_.erase(std::remove_if( powerups_.begin(), powerups_.end(),
+      [this](const PowerUp& p){
+        if (p.hitbox().intersect(mouse_.hitbox())) {
+          return powerup(p.type());
         } else {
           return false;
         }
-      }), objects_.end());
+      }), powerups_.end());
 
   mouse_.update(elapsed);
 
@@ -47,12 +47,11 @@ bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
     std::uniform_int_distribution<int> rx(0, maze_.width() - 1);
     std::uniform_int_distribution<int> ry(0, maze_.height() - 1);
 
-    if (objects_.size() < 3) {
+    if (powerups_.size() < 3) {
       // Pick a random number 0 - 9 which will be devided by 3
       // This gives 30% chance each for Cheese, Water, and Leaf, and 10% chance for Mushroom
       std::uniform_int_distribution<int> rd(0, 9);
-
-      objects_.emplace_back(static_cast<Object::Type>(rd(rand_) / 3), rx(rand_), ry(rand_));
+      powerups_.emplace_back(static_cast<PowerUp::Type>(rd(rand_) / 3), rx(rand_), ry(rand_));
     }
 
     if (enemies_.size() < 2) {
@@ -82,8 +81,8 @@ bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
     }
   }
 
-  for (auto& o : objects_) {
-    o.update(elapsed);
+  for (auto& p : powerups_) {
+    p.update(elapsed);
   }
 
   for (auto& e : enemies_) {
@@ -95,8 +94,8 @@ bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
 
 void MazeScreen::draw(Graphics& graphics) const {
   maze_.draw(graphics, 0, 16);
-  for (const auto& o : objects_) {
-    o.draw(graphics, 0, 16);
+  for (const auto& p : powerups_) {
+    p.draw(graphics, 0, 16);
   }
   for (const auto& e : enemies_) {
     e.draw(graphics, 0, 16);
@@ -126,22 +125,22 @@ void MazeScreen::try_to_move(int direction) {
   }
 }
 
-bool MazeScreen::powerup(Object::Type type) {
+bool MazeScreen::powerup(PowerUp::Type type) {
   switch (type) {
-    case Object::Type::Cheese:
+    case PowerUp::Type::Cheese:
       // TODO increase mouse satiety
       return true;
 
-    case Object::Type::Droplet:
-    case Object::Type::Leaf:
+    case PowerUp::Type::Droplet:
+    case PowerUp::Type::Leaf:
       if (item_) {
         return false;
       } else {
-        item_.reset(new Object(type, 0, 0));
+        item_.reset(new PowerUp(type, 0, 0));
         return true;
       }
 
-    case Object::Type::Mushroom:
+    case PowerUp::Type::Mushroom:
       // TODO grant invulnerability to mouse
       return true;
 
