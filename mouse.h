@@ -23,7 +23,7 @@ class Mouse : public MobileEntity {
   private:
 
     static constexpr float kVelocity = 16 / 250.0f;
-    static constexpr float kHungerRate = 0.005f;
+    static constexpr float kHungerRate = 0.02f;
 
     Timer animation_;
     float satiety_;
