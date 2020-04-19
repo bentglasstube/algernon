@@ -111,12 +111,19 @@ bool MazeScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
   }
 
   if (!mouse_.invulnerable()) {
-    for (const auto& e : enemies_ ) {
-      if (e.touching(mouse_)) {
-        mouse_.hurt();
-        audio.play_sample("hurt.wav");
-      }
-    }
+    enemies_.erase(std::remove_if( enemies_.begin(), enemies_.end(),
+          [this, &audio](const Enemy& e){
+            if (e.touching(mouse_)) {
+              if (mouse_.powered_up()) {
+                audio.play_sample("bite.wav");
+                return true;
+              } else {
+                mouse_.hurt();
+                audio.play_sample("hurt.wav");
+                return false;
+              }
+            }
+          }), enemies_.end());
   }
 
   return true;
@@ -201,7 +208,7 @@ bool MazeScreen::powerup(PowerUp::Type type, Audio& audio) {
       }
 
     case PowerUp::Type::Mushroom:
-      // TODO grant invulnerability to mouse
+      mouse_.powerup();
       audio.play_sample("shroom.wav");
       return true;
 

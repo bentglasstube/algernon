@@ -41,8 +41,8 @@ void Enemy::update(unsigned int elapsed, const Mouse& mouse, const Maze& maze) {
 
 int Enemy::frame() const {
   switch (type_) {
-    case Type::Snake: return timer_.value() > 200 ? 4 : 5;
-    case Type::Spider: return timer_.value() > 200 ? 6 : 7;
+    case Type::Snake: return timer_.value() > 200 ? 16 : 17;
+    case Type::Spider: return timer_.value() > 200 ? 18 : 19;
     default: return 99;
   }
 }

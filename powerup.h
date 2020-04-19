@@ -19,5 +19,5 @@ class PowerUp : public Entity {
     int timer_;
 
     float y() const override { return y_ + 3 * std::sin(timer_ / 500.0f); }
-    int frame() const override { return 8 + static_cast<int>(type_); }
+    int frame() const override { return 20 + static_cast<int>(type_); }
 };
