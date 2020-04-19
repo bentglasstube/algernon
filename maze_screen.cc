@@ -14,7 +14,7 @@ MazeScreen::MazeScreen() :
   rand_.seed(Util::random_seed());
 }
 
-bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
+bool MazeScreen::update(const Input& input, Audio& audio, unsigned int elapsed) {
   if (!mouse_.moving()) {
     if (input.key_held(Input::Button::Up)) {
       try_to_move(0);
@@ -27,8 +27,9 @@ bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
     }
   }
 
-  if (input.key_pressed(Input::Button::Select)) {
-    if (item_) item_.reset();
+  if (input.key_pressed(Input::Button::Select) && item_) {
+    item_.reset();
+    audio.play_sample("drop.wav");
   }
 
   for (auto& p : powerups_) { p.update(elapsed); }
@@ -38,9 +39,9 @@ bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
   spawner_.update(elapsed);
 
   powerups_.erase(std::remove_if( powerups_.begin(), powerups_.end(),
-      [this](const PowerUp& p){
+      [this, &audio](const PowerUp& p){
         if (p.touching(mouse_)) {
-          return powerup(p.type());
+          return powerup(p.type(), audio);
         } else {
           return false;
         }
@@ -95,11 +96,13 @@ bool MazeScreen::update(const Input& input, Audio&, unsigned int elapsed) {
       case PowerUp::Type::Droplet:
         flower_.give_water();
         item_.reset();
+        audio.play_sample("boost.wav");
         break;
 
       case PowerUp::Type::Leaf:
         flower_.give_composte();
         item_.reset();
+        audio.play_sample("boost.wav");
         break;
 
       default:
@@ -174,7 +177,7 @@ void MazeScreen::try_to_move(int direction) {
   }
 }
 
-bool MazeScreen::powerup(PowerUp::Type type) {
+bool MazeScreen::powerup(PowerUp::Type type, Audio& audio) {
   switch (type) {
     case PowerUp::Type::Cheese:
       mouse_.feed();
@@ -186,11 +189,13 @@ bool MazeScreen::powerup(PowerUp::Type type) {
         return false;
       } else {
         item_.reset(new PowerUp(type, {0, 0}));
+        audio.play_sample("pickup.wav");
         return true;
       }
 
     case PowerUp::Type::Mushroom:
       // TODO grant invulnerability to mouse
+      audio.play_sample("shroom.wav");
       return true;
 
     default:

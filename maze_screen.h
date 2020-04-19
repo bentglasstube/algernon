@@ -42,7 +42,7 @@ class MazeScreen : public Screen {
     std::mt19937 rand_;
 
     void try_to_move(int direction);
-    bool powerup(PowerUp::Type type);
+    bool powerup(PowerUp::Type type, Audio& audio);
 
     void draw_ui(Graphics& graphics) const;
     void histogram(Graphics& graphics, int base, float value, int x, int y, bool reverse) const;
