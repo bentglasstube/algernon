@@ -158,11 +158,11 @@ bool MazeScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
       }
 
       // Win and loss conditions
-      if (mouse_.lives() <= 0)      set_result(Result::Killed);
-      if (mouse_.satiety() <= 0)    set_result(Result::Starved);
-      if (flower_.nutrients() <= 0) set_result(Result::Stunted);
-      if (flower_.water() <= 0)     set_result(Result::Wilted);
-      if (flower_.growth() >= 4)    set_result(Result::Grew);
+      if (mouse_.lives() <= 0)      set_result(audio, Result::Killed);
+      if (mouse_.satiety() <= 0)    set_result(audio, Result::Starved);
+      if (flower_.nutrients() <= 0) set_result(audio, Result::Stunted);
+      if (flower_.water() <= 0)     set_result(audio, Result::Wilted);
+      if (flower_.growth() >= 4)    set_result(audio, Result::Grew);
 
       break;
 
@@ -273,10 +273,16 @@ bool MazeScreen::powerup(PowerUp::Type type, Audio& audio) {
   }
 }
 
-void MazeScreen::set_result(Result r) {
+void MazeScreen::set_result(Audio& audio, Result r) {
   result_ = r;
   state_ = State::Outro;
   story_.reset(new AppearingText(kEnding.at(result_).second));
+
+  if (r == Result::Grew) {
+    audio.play_music("springtime.ogg", true);
+  } else {
+    audio.play_music("schvitz.ogg", false);
+  }
 }
 
 const std::unordered_map<MazeScreen::Result, std::pair<int, std::string>, Util::CastHash<MazeScreen::Result>> MazeScreen::kEnding = {

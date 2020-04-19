@@ -30,7 +30,9 @@ TitleScreen::TitleScreen() :
   roll_.add_entry(new TitleRoll::Description("These predators will charge at\ntheir prey when they can see it.\nBe careful around them."));
 }
 
-bool TitleScreen::update(const Input& input, Audio&, unsigned int elapsed) {
+bool TitleScreen::update(const Input& input, Audio& audio, unsigned int elapsed) {
+  audio.play_music("cyberhog.ogg", true);
+
   flash_.update(elapsed);
   generator_.update(elapsed);
   flower_.update(elapsed * 100);

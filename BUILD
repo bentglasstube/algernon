@@ -3,7 +3,7 @@ package(default_visibility = ["//visibility:public"])
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
 
 cc_binary(
-    name = "ld46",
+    name = "algernon",
     data = ["//content"],
     linkopts = [
         "-lSDL2",
@@ -20,12 +20,12 @@ cc_binary(
 )
 
 pkg_tar(
-    name = "ld46-linux",
+    name = "algernon-linux",
     extension = "tar.gz",
     strip_prefix = "/",
-    package_dir = "ld46/",
+    package_dir = "algernon/",
     srcs = [
-        ":ld46",
+        ":algernon",
         "//content",
     ],
 )

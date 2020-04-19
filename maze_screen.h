@@ -59,6 +59,6 @@ class MazeScreen : public Screen {
 
     void draw_ui(Graphics& graphics) const;
     void histogram(Graphics& graphics, int base, float value, int x, int y, bool reverse) const;
-    void set_result(Result r);
+    void set_result(Audio& audio, Result r);
     int ending() const;
 };
