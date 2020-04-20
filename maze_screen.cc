@@ -78,8 +78,12 @@ bool MazeScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
           }), powerups_.end());
 
       if (spawner_.fired()) {
-        if (powerups_.size() < 5) spawn_powerup();
-        if (enemies_.size() < 3) spawn_enemy();
+        std::uniform_int_distribution<size_t> drop(0, powerups_.size() + enemies_.size() + 1);
+        if (drop(rand_) <= enemies_.size()) {
+          spawn_powerup();
+        } else {
+          spawn_enemy();
+        }
       }
 
       if (mouse_.touching(flower_) && item_) {
@@ -265,6 +269,7 @@ void MazeScreen::spawn_powerup() {
   weights.push_back(PowerUp::Type::Mushroom);
 
   if (mouse_.lives() == 1) weights.push_back(PowerUp::Type::Mushroom);
+  if (enemies_.size() > 5) weights.push_back(PowerUp::Type::Mushroom);
 
   if (mouse_.satiety() < 7) weights.push_back(PowerUp::Type::Cheese);
   if (mouse_.satiety() < 5) weights.push_back(PowerUp::Type::Cheese);
@@ -281,7 +286,6 @@ void MazeScreen::spawn_powerup() {
   std::shuffle(weights.begin(), weights.end(), rand_);
 
   powerups_.emplace_back(weights.back(), maze_.random_pos());
-
 }
 
 void MazeScreen::spawn_enemy() {
