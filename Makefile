@@ -8,7 +8,6 @@ CONTENT=$(wildcard content/*.png) $(wildcard content/*.mp3) $(wildcard content/*
 BUILDDIR=$(CROSS)output
 OBJECTS=$(patsubst %.cc,$(BUILDDIR)/%.o,$(SOURCES))
 NAME=algernon
-APP_NAME=Algernon
 VERSION=$(shell git describe --tags --dirty)
 
 CC=$(CROSS)g++
@@ -27,7 +26,7 @@ ifeq ($(UNAME), Windows)
 	EXECUTABLE=$(BUILDDIR)/$(NAME).exe
 endif
 ifeq ($(UNAME), Linux)
-	PACKAGE=$(APP_NAME)-linux-$(VERSION).AppImage
+	PACKAGE=$(NAME)-linux-$(VERSION).AppImage
 	LDFLAGS=-static-libstdc++ -static-libgcc
 	LDLIBS=`$(PKG_CONFIG) sdl2 SDL2_mixer SDL2_image --cflags --libs` -Wl,-Bstatic
 endif
@@ -60,9 +59,9 @@ package: $(PACKAGE)
 
 wasm: $(NAME)-$(VERSION).html
 
-$(NAME)-osx-$(VERSION).tgz: $(APP_NAME).app
+$(NAME)-osx-$(VERSION).tgz: $(NAME).app
 	mkdir $(NAME)
-	cp -r $(APP_NAME).app $(NAME)/.
+	cp -r $(NAME).app $(NAME)/.
 	tar zcf $@ $(NAME)
 	rm -rf $(NAME)
 
@@ -76,29 +75,29 @@ $(NAME)-windows-$(VERSION).zip: $(EXECUTABLE) $(CONTENT)
 $(NAME)-$(VERSION).html: $(SOURCES) $(CONTENT)
 	emcc $(CFLAGS) $(EMFLAGS) -o $@ $(SOURCES) --preload-file content/
 
-$(APP_NAME).app: $(EXECUTABLE) launcher $(CONTENT) Info.plist
-	rm -rf $(APP_NAME).app
-	mkdir -p $(APP_NAME).app/Contents/{MacOS,Frameworks}
-	cp $(EXECUTABLE) $(APP_NAME).app/Contents/MacOS/game
-	cp launcher $(APP_NAME).app/Contents/MacOS/launcher
-	cp -R content $(APP_NAME).app/Contents/MacOS/content
-	cp Info.plist $(APP_NAME).app/Contents/Info.plist
-	cp -R /Library/Frameworks/SDL2.framework $(APP_NAME).app/Contents/Frameworks/SDL2.framework
-	cp -R /Library/Frameworks/SDL2_mixer.framework $(APP_NAME).app/Contents/Frameworks/SDL2_mixer.framework
-	cp -R /Library/Frameworks/SDL2_image.framework $(APP_NAME).app/Contents/Frameworks/SDL2_image.framework
+$(NAME).app: $(EXECUTABLE) launcher $(CONTENT) Info.plist
+	rm -rf $(NAME).app
+	mkdir -p $(NAME).app/Contents/{MacOS,Frameworks}
+	cp $(EXECUTABLE) $(NAME).app/Contents/MacOS/game
+	cp launcher $(NAME).app/Contents/MacOS/launcher
+	cp -R content $(NAME).app/Contents/MacOS/content
+	cp Info.plist $(NAME).app/Contents/Info.plist
+	cp -R /Library/Frameworks/SDL2.framework $(NAME).app/Contents/Frameworks/SDL2.framework
+	cp -R /Library/Frameworks/SDL2_mixer.framework $(NAME).app/Contents/Frameworks/SDL2_mixer.framework
+	cp -R /Library/Frameworks/SDL2_image.framework $(NAME).app/Contents/Frameworks/SDL2_image.framework
 
-$(APP_NAME)-linux-$(VERSION).AppDir: $(EXECUTABLE) $(CONTENT) AppRun icon.png $(APP_NAME).desktop
+$(NAME)-linux-$(VERSION).AppDir: $(EXECUTABLE) $(CONTENT) AppRun icon.png $(NAME).desktop
 	rm -rf $@
 	mkdir -p $@/usr/{bin,lib}
 	mkdir -p $@/content
 	cp $(EXECUTABLE) $@/usr/bin
 	cp AppRun $@/.
-	cp $(APP_NAME).desktop $@/.
+	cp $(NAME).desktop $@/.
 	cp icon.png $@/.
 	cp $(CONTENT) $@/content/.
 	cp /usr/lib/libSDL2{,_image,_mixer}-2.0.so.0 $@/usr/lib/.
 
-$(APP_NAME)-linux-$(VERSION).AppImage: $(APP_NAME)-linux-$(VERSION).AppDir
+$(NAME)-linux-$(VERSION).AppImage: $(NAME)-linux-$(VERSION).AppDir
 	appimagetool $<
 
 clean:
