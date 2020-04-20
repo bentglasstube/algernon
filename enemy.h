@@ -22,7 +22,7 @@ class Enemy : public MobileEntity {
     Type type_;
     Timer timer_;
     bool charging_;
-    int idle_timer_;
+    int idle_timer_, exit_timer_;
     std::mt19937 rand_;
 
     int frame() const override;

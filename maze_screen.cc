@@ -105,22 +105,21 @@ bool MazeScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
         }
       }
 
-      if (!mouse_.invulnerable()) {
-        enemies_.erase(std::remove_if( enemies_.begin(), enemies_.end(),
-              [this, &audio](const Enemy& e){
-                if (e.touching(mouse_)) {
-                  if (mouse_.powered_up()) {
-                    audio.play_sample("bite.wav");
-                    return true;
-                  } else {
-                    mouse_.hurt();
-                    audio.play_sample("hurt.wav");
-                    return false;
-                  }
+      enemies_.erase(std::remove_if( enemies_.begin(), enemies_.end(),
+            [this, &audio](const Enemy& e){
+              if (!maze_.valid(e.pos())) return true;
+              if (e.touching(mouse_)) {
+                if (mouse_.powered_up()) {
+                  audio.play_sample("bite.wav");
+                  return true;
+                } else if (!mouse_.invulnerable()) {
+                  mouse_.hurt();
+                  audio.play_sample("hurt.wav");
+                  return false;
                 }
-                return false;
-              }), enemies_.end());
-      }
+              }
+              return false;
+            }), enemies_.end());
 
       // Win and loss conditions
       if (mouse_.lives() <= 0)      set_result(audio, Result::Killed);

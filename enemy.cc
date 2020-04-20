@@ -4,7 +4,7 @@
 
 Enemy::Enemy(Enemy::Type type, Maze::Point p) :
   MobileEntity(p), type_(type),
-  timer_(400), charging_(false), idle_timer_(250)
+  timer_(400), charging_(false), idle_timer_(250), exit_timer_(50000)
 {
   rand_.seed(Util::random_seed());
 }
@@ -12,8 +12,27 @@ Enemy::Enemy(Enemy::Type type, Maze::Point p) :
 void Enemy::update(unsigned int elapsed, const Mouse& mouse, const Maze& maze) {
   timer_.update(elapsed);
   move_toward_target(elapsed, speed());
+  exit_timer_ -= elapsed;
 
   if (!moving()) {
+    // If the exit timer has expired, try to leave the maze
+    if (exit_timer_ < 0) {
+      const auto p = pos();
+      if (p.x == 0) {
+        set_target({-1, p.y});
+        return;
+      } else if (p.y == 0) {
+        set_target({p.x, -1});
+        return;
+      } else if (p.x == maze.width() - 1) {
+        set_target({maze.width(), p.y});
+        return;
+      } else if (p.y == maze.height() - 1) {
+        set_target({p.x, maze.height()});
+        return;
+      }
+    }
+
     // Wait for idle timer if needed
     if (idle_timer_ > 0) {
       idle_timer_ -= elapsed;

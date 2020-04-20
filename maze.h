@@ -26,6 +26,7 @@ class Maze {
 
     bool wall(Point p, int dir) const;
 
+    bool valid(Point p) const { return p.x >= 0 && p.x < width_ && p.y >= 0 && p.y < height_; }
     int width() const { return width_; }
     int height() const { return height_; }
 
@@ -50,7 +51,6 @@ class Maze {
     std::stack<Point> frontier_;
     std::mt19937 rand_;
 
-    bool valid(Point p) const { return p.x >= 0 && p.x < width_ && p.y >= 0 && p.y < height_; }
     uint8_t at(Point p) const { return valid(p) ? cells_[p.y * width_ + p.x].to_ulong() : 31; }
 
     std::vector<Point> unvisited_neighbors(Point p) const;

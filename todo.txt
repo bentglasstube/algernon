@@ -1,5 +1,3 @@
-Improved Spawning
-Enemy Departure
 Growth rate affected by plant health
 Spiders attack flower
 Multi-room (Hard mode)
