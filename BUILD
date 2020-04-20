@@ -1,17 +1,35 @@
 package(default_visibility = ["//visibility:public"])
 
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
+load("@mxebzl//tools:rules.bzl", "pkg_winzip")
+
+config_setting(
+    name = "windows",
+    values = {
+        "crosstool_top": "@mxebzl//compiler:win64",
+    },
+)
 
 cc_binary(
     name = "algernon",
     data = ["//content"],
-    linkopts = [
-        "-lSDL2",
-        "-lSDL2_image",
-        "-lSDL2_mixer",
-        "-static-libstdc++",
-        "-static-libgcc",
-    ],
+    linkopts = select({
+        ":windows": [
+          "-lSDL2main",
+          "-lSDL2",
+          "-lSDL2_image",
+          "-lSDL2_mixer",
+          "-static-libstdc++",
+          "-static-libgcc",
+        ],
+        "//conditions:default": [
+          "-lSDL2",
+          "-lSDL2_image",
+          "-lSDL2_mixer",
+          "-static-libstdc++",
+          "-static-libgcc",
+        ],
+    }),
     srcs = ["main.cc"],
     deps = [
         "@libgam//:game",
