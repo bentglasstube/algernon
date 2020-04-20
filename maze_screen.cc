@@ -259,32 +259,29 @@ const std::unordered_map<MazeScreen::Result, std::pair<int, std::string>, Util::
 };
 
 void MazeScreen::spawn_powerup() {
-  std::vector<PowerUp::Type> weights;
+  int cheese = 1;
+  int water = 1;
+  int leaf = 1;
+  int mushroom = 1;
 
-  // default weights
-  weights.push_back(PowerUp::Type::Cheese);
-  weights.push_back(PowerUp::Type::Droplet);
-  weights.push_back(PowerUp::Type::Leaf);
-  weights.push_back(PowerUp::Type::Mushroom);
+  if (mouse_.lives() == 1) ++mushroom;
+  if (enemies_.size() > 5) ++mushroom;
 
-  if (mouse_.lives() == 1) weights.push_back(PowerUp::Type::Mushroom);
-  if (enemies_.size() > 5) weights.push_back(PowerUp::Type::Mushroom);
+  if (mouse_.satiety() < 7) ++cheese;
+  if (mouse_.satiety() < 5) ++cheese;
+  if (mouse_.satiety() < 2) ++cheese;
 
-  if (mouse_.satiety() < 7) weights.push_back(PowerUp::Type::Cheese);
-  if (mouse_.satiety() < 5) weights.push_back(PowerUp::Type::Cheese);
-  if (mouse_.satiety() < 2) weights.push_back(PowerUp::Type::Cheese);
+  if (flower_.nutrients() < 7) ++leaf;
+  if (flower_.nutrients() < 5) ++leaf;
+  if (flower_.nutrients() < 2) ++leaf;
 
-  if (flower_.nutrients() < 7) weights.push_back(PowerUp::Type::Leaf);
-  if (flower_.nutrients() < 5) weights.push_back(PowerUp::Type::Leaf);
-  if (flower_.nutrients() < 2) weights.push_back(PowerUp::Type::Leaf);
+  if (flower_.water() < 7) ++water;
+  if (flower_.water() < 5) ++water;
+  if (flower_.water() < 2) ++water;
 
-  if (flower_.water() < 7) weights.push_back(PowerUp::Type::Droplet);
-  if (flower_.water() < 5) weights.push_back(PowerUp::Type::Droplet);
-  if (flower_.water() < 2) weights.push_back(PowerUp::Type::Droplet);
+  std::discrete_distribution<int> drop({cheese, water, leaf, mushroom});
 
-  std::shuffle(weights.begin(), weights.end(), rand_);
-
-  powerups_.emplace_back(weights.back(), maze_.random_pos());
+  powerups_.emplace_back(static_cast<PowerUp::Type>(drop(rand_)), maze_.random_pos());
 }
 
 void MazeScreen::spawn_enemy() {
