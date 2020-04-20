@@ -243,9 +243,9 @@ void MazeScreen::set_result(Audio& audio, Result r) {
   story_.reset(new AppearingText(kEnding.at(result_).second));
 
   if (r == Result::Grew) {
-    audio.play_music("springtime.ogg", true);
+    audio.play_music("springtime.mp3", true);
   } else {
-    audio.play_music("schvitz.ogg", false);
+    audio.play_music("schvitz.mp3", false);
   }
 }
 
