@@ -15,8 +15,8 @@ class Flower : public Entity {
 
     float growth_rate() const { return kGrowthRate * std::log(std::min(water_, nutrients_) + 1); }
 
-    void give_water() { water_ = std::min(water_ + 1, 8.0f); }
-    void give_composte() { nutrients_ = std::min(nutrients_ + 1, 8.0f); }
+    void give_water(float value) { water_ = std::min(water_ + value, 8.0f); }
+    void give_composte(float value) { nutrients_ = std::min(nutrients_ + value, 8.0f); }
 
   private:
 

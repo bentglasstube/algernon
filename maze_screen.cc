@@ -87,15 +87,16 @@ bool MazeScreen::update(const Input& input, Audio& audio, unsigned int elapsed) 
       }
 
       if (mouse_.touching(flower_) && item_) {
+        std::normal_distribution<float> value(1.0, 0.1);
         switch (item_->type()) {
           case PowerUp::Type::Droplet:
-            flower_.give_water();
+            flower_.give_water(value(rand_));
             item_.reset();
             audio.play_sample("boost.wav");
             break;
 
           case PowerUp::Type::Leaf:
-            flower_.give_composte();
+            flower_.give_composte(value(rand_));
             item_.reset();
             audio.play_sample("boost.wav");
             break;
