@@ -31,7 +31,7 @@ TitleScreen::TitleScreen() :
 }
 
 bool TitleScreen::update(const Input& input, Audio& audio, unsigned int elapsed) {
-  audio.play_music("cyberhog.mp3", true);
+  audio.play_music("cyberhog.ogg", true);
 
   flash_.update(elapsed);
   generator_.update(elapsed);
