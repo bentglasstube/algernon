@@ -59,6 +59,13 @@ package: $(PACKAGE)
 
 wasm: $(NAME)-$(VERSION).html
 
+web: wasm $(NAME)-$(VERSION).js $(NAME)-$(VERSION).data
+	mkdir -p $(NAME)-web-$(VERSION)
+	cp $(NAME)-$(VERSION).js $(NAME)-web-$(VERSION)
+	cp $(NAME)-$(VERSION).wasm $(NAME)-web-$(VERSION)
+	cp $(NAME)-$(VERSION).data $(NAME)-web-$(VERSION)
+	cp $(NAME)-$(VERSION).html $(NAME)-web-$(VERSION)/index.html
+
 $(NAME)-osx-$(VERSION).tgz: $(NAME).app
 	mkdir $(NAME)
 	cp -r $(NAME).app $(NAME)/.

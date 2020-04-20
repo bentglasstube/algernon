@@ -8,4 +8,5 @@ bazel-*
 /*.html
 /*.js
 /*.wasm
+/*-web-*/
 *output/
