@@ -1,6 +1,6 @@
 UNAME=$(shell uname)
 ifeq ($(UNAME), Windows)
-	CROSS=i686-w64-mingw32.static-
+	CROSS=x86_64-w64-mingw32.static-
 endif
 
 SOURCES=$(wildcard *.cc) $(wildcard gam/*.cc)
@@ -18,10 +18,13 @@ PKG_CONFIG=$(CROSS)pkg-config
 CFLAGS=-O3 --std=c++14 -Wall -Wextra -Werror -pedantic -I gam -DNDEBUG
 EMFLAGS=-s USE_SDL=2 -s USE_SDL_MIXER=2 -s USE_SDL_IMAGE=2 -s SDL2_IMAGE_FORMATS='["png"]'
 
+EXECUTABLE=$(BUILDDIR)/$(NAME)
+
 ifeq ($(UNAME), Windows)
 	PACKAGE=$(NAME)-windows-$(VERSION).zip
 	LDFLAGS=-static-libstdc++ -static-libgcc
 	LDLIBS=`$(PKG_CONFIG) sdl2 SDL2_mixer SDL2_image --cflags --libs` -Wl,-Bstatic
+	EXECUTABLE=$(BUILDDIR)/$(NAME).exe
 endif
 ifeq ($(UNAME), Linux)
 	PACKAGE=$(APP_NAME)-linux-$(VERSION).AppImage
@@ -34,8 +37,6 @@ ifeq ($(UNAME), Darwin)
 	CFLAGS+=-mmacosx-version-min=10.9
 endif
 
-EXECUTABLE=$(BUILDDIR)/$(NAME)
-
 all: $(EXECUTABLE)
 
 echo:
@@ -43,6 +44,7 @@ echo:
 	@echo "Sources: $(SOURCES)"
 	@echo "Uname: $(UNAME)"
 	@echo "Package: $(PACKAGE)"
+	@echo "Version: $(VERSION)"
 
 run: $(EXECUTABLE)
 	./$(EXECUTABLE)
@@ -85,7 +87,7 @@ $(APP_NAME).app: $(EXECUTABLE) launcher $(CONTENT) Info.plist
 	cp -R /Library/Frameworks/SDL2_mixer.framework $(APP_NAME).app/Contents/Frameworks/SDL2_mixer.framework
 	cp -R /Library/Frameworks/SDL2_image.framework $(APP_NAME).app/Contents/Frameworks/SDL2_image.framework
 
-$(APP_NAME)-linux-$(VERSION).AppDir: $(EXECUTABLE) $(CONTENT)
+$(APP_NAME)-linux-$(VERSION).AppDir: $(EXECUTABLE) $(CONTENT) AppRun icon.png $(APP_NAME).desktop
 	rm -rf $@
 	mkdir -p $@/usr/{bin,lib}
 	mkdir -p $@/content
