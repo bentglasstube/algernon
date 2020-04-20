@@ -108,6 +108,13 @@ $(NAME)-linux-$(VERSION).AppImage: $(NAME)-linux-$(VERSION).AppDir
 	appimagetool $<
 
 clean:
-	rm -rf $(BUILDDIR) *.app *.zip *.tgz *.html *.js *.data *.wasm
+	rm -rf $(BUILDDIR)
 
-.PHONY: all clean run package wasm
+distclean: clean
+	rm -rf *.app *.tgz *.zip
+	rm -rf *.AppDir *.AppImage
+	rm -rf *.html *.js *.data *.wasm
+	rm -rf *-web-*/ *output/
+
+
+.PHONY: all echo clean distclean run package wasm web
