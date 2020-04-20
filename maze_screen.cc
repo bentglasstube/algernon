@@ -179,9 +179,8 @@ void MazeScreen::draw_ui(Graphics& graphics) const {
   histogram(graphics, 8, flower_.nutrients(), 248, 8, true);
 
 #ifndef NDEBUG
-  text_.draw(graphics, "W: " + std::to_string((int)std::round(flower_.water() * 100)), 0, 192);
-  text_.draw(graphics, "N: " + std::to_string((int)std::round(flower_.nutrients() * 100)), 0, 208);
-  text_.draw(graphics, "G: " + std::to_string((int)std::round(flower_.growth() * 100)), 0, 224);
+  text_.draw(graphics, "G: " + std::to_string(flower_.growth()), 0, 208);
+  text_.draw(graphics, "R: " + std::to_string(flower_.growth_rate()), 0, 224);
 #endif
 }
 
