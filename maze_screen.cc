@@ -256,10 +256,32 @@ const std::unordered_map<MazeScreen::Result, std::pair<int, std::string>, Util::
 };
 
 void MazeScreen::spawn_powerup() {
-  // Pick a random number 0 - 9 which will be devided by 3
-  // This gives 30% chance each for Cheese, Water, and Leaf, and 10% chance for Mushroom
-  std::uniform_int_distribution<int> rd(0, 9);
-  powerups_.emplace_back(static_cast<PowerUp::Type>(rd(rand_) / 3), maze_.random_pos());
+  std::vector<PowerUp::Type> weights;
+
+  // default weights
+  weights.push_back(PowerUp::Type::Cheese);
+  weights.push_back(PowerUp::Type::Droplet);
+  weights.push_back(PowerUp::Type::Leaf);
+  weights.push_back(PowerUp::Type::Mushroom);
+
+  if (mouse_.lives() == 1) weights.push_back(PowerUp::Type::Mushroom);
+
+  if (mouse_.satiety() < 7) weights.push_back(PowerUp::Type::Cheese);
+  if (mouse_.satiety() < 5) weights.push_back(PowerUp::Type::Cheese);
+  if (mouse_.satiety() < 2) weights.push_back(PowerUp::Type::Cheese);
+
+  if (flower_.nutrients() < 7) weights.push_back(PowerUp::Type::Leaf);
+  if (flower_.nutrients() < 5) weights.push_back(PowerUp::Type::Leaf);
+  if (flower_.nutrients() < 2) weights.push_back(PowerUp::Type::Leaf);
+
+  if (flower_.water() < 7) weights.push_back(PowerUp::Type::Droplet);
+  if (flower_.water() < 5) weights.push_back(PowerUp::Type::Droplet);
+  if (flower_.water() < 2) weights.push_back(PowerUp::Type::Droplet);
+
+  std::shuffle(weights.begin(), weights.end(), rand_);
+
+  powerups_.emplace_back(weights.back(), maze_.random_pos());
+
 }
 
 void MazeScreen::spawn_enemy() {
