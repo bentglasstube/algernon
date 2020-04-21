@@ -259,10 +259,10 @@ const std::unordered_map<MazeScreen::Result, std::pair<int, std::string>, Util::
 };
 
 void MazeScreen::spawn_powerup() {
-  int cheese = 1;
-  int water = 1;
-  int leaf = 1;
-  int mushroom = 1;
+  double cheese = 1;
+  double water = 1;
+  double leaf = 1;
+  double mushroom = 1;
 
   if (mouse_.lives() == 1) ++mushroom;
   if (enemies_.size() > 5) ++mushroom;
