@@ -16,10 +16,10 @@ load("@mxebzl//compiler:repository.bzl", "mxe_compiler")
 
 mxe_compiler(
     deps = [
+        "compiler",
         "SDL2",
         "SDL2-extras",
-        "compiler",
+        "xz",
         "pthreads",
-        "python",
     ],
 )

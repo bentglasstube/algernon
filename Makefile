@@ -74,7 +74,7 @@ $(NAME)-osx-$(VERSION).tgz: $(NAME).app
 
 $(NAME)-windows-$(VERSION).zip: $(EXECUTABLE) $(CONTENT)
 	mkdir -p $(NAME)/content
-	cp $(EXECUTABLE) $(NAME)/`basename $(EXECUTABLE)`.exe
+	cp $(EXECUTABLE) $(NAME)/`basename $(EXECUTABLE)`
 	cp $(CONTENT) $(NAME)/content/.
 	zip -r $@ $(NAME)
 	rm -rf $(NAME)

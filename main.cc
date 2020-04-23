@@ -13,7 +13,7 @@ void step(void* game) {
 int main(int, char**) {
   Game::Config config;
 
-  config.graphics.title = "LD46";
+  config.graphics.title = "Algernon's Flower";
   config.graphics.width = 256;
   config.graphics.height = 240;
   config.graphics.scale = 3;
@@ -32,4 +32,3 @@ int main(int, char**) {
 
   return 0;
 }
-

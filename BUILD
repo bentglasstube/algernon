@@ -15,26 +15,31 @@ cc_binary(
     data = ["//content"],
     linkopts = select({
         ":windows": [
-          "-lSDL2main",
-          "-lSDL2",
-          "-lSDL2_image",
-          "-lSDL2_mixer",
-          "-static-libstdc++",
-          "-static-libgcc",
+            "-mwindows",
+            "-lmingw32",
+            "-lSDL2main"
         ],
-        "//conditions:default": [
-          "-lSDL2",
-          "-lSDL2_image",
-          "-lSDL2_mixer",
-          "-static-libstdc++",
-          "-static-libgcc",
-        ],
-    }),
+        "//conditions:default": [],
+    }) + [
+        "-lSDL2",
+        "-lSDL2_image",
+        "-lSDL2_mixer",
+        "-static-libstdc++",
+        "-static-libgcc",
+    ],
     srcs = ["main.cc"],
     deps = [
         "@libgam//:game",
         ":screens",
     ],
+)
+
+pkg_winzip(
+    name = "algernon-windows",
+    files = [
+        ":algernon",
+        "//content",
+    ]
 )
 
 pkg_tar(
